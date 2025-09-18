@@ -7,7 +7,10 @@ node_modules
 
 # Local env files
 .env
-.env*.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # Testing
 coverage
@@ -33,7 +36,3 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
-
-# Typescript
-*.tsbuildinfo
-next-env.d.ts

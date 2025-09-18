@@ -1,27 +1,20 @@
 {
-  "name": "turborepo-shadcn-ui",
-  "version": "1.5.1",
+  "name": "n8n-monorepo-v1",
   "private": true,
-  "license": "MIT",
   "scripts": {
-    "build": "turbo build",
-    "dev": "turbo dev",
-    "lint": "turbo lint",
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "ui": "pnpm --filter @repo/ui ui"
+    "check-types": "turbo run check-types"
   },
   "devDependencies": {
-    "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
-    "prettier": "catalog:",
-    "turbo": "2.1.1"
+    "prettier": "^3.6.2",
+    "turbo": "^2.5.6",
+    "typescript": "5.9.2"
   },
-  "packageManager": "pnpm@9.12.0",
+  "packageManager": "pnpm@9.0.0",
   "engines": {
-    "node": ">=20.17.0"
-  },
-  "volta": {
-    "node": "20.17.0",
-    "pnpm": "9.12.0"
+    "node": ">=18"
   }
 }
