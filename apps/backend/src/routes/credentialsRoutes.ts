@@ -36,9 +36,10 @@ router.post("/", authMiddleware, async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
+router.get("/", authMiddleware, async (req, res) => {
   try {
     const userId = req.userId!;
+
     const credentails = await prisma.credentials.findMany({
       where: {
         userId,

@@ -51,6 +51,12 @@ export async function sendEmail(
     const fromEmail = (data as JsonObject).email as string;
 
     if (!smtpHost || !smtpPort || !password || !fromEmail) {
+      console.error("Missing required email configuration:", {
+        smtpHost,
+        smtpPort,
+        passwordPresent: !!password,
+        fromEmail,
+      });
       return {
         success: false,
         failedReason:
@@ -59,6 +65,7 @@ export async function sendEmail(
     }
 
     if (!to || !subject) {
+      console.error("Missing required email fields:", { to, subject });
       return {
         success: false,
         failedReason: "Missing required email fields (to or subject)",

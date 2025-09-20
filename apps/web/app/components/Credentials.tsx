@@ -3,6 +3,7 @@ import axios from "axios";
 import { Button } from "./Buttons";
 import CreateCredentialsForm from "./CreateCredentialsForm";
 import { BACKEND_URL, TOKEN } from "../config";
+import { getCredentails } from "../helpers/function";
 
 const Credentials = () => {
   const [openPopup, setOpenPopup] = useState(false);
@@ -10,13 +11,8 @@ const Credentials = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get(`${BACKEND_URL}/credentails`, {
-        headers: {
-          Authorization: `Bearer ${TOKEN}`,
-        },
-      })
-      .then((res) => setCredentials((res.data as any).credentials))
+    getCredentails()
+      .then((res) => setCredentials((res as any).credentials))
       .catch(() => setCredentials([]));
     setLoading(false);
   }, []);
@@ -46,11 +42,8 @@ const Credentials = () => {
         ) : (
           <ul className="text-sm text-black flex flex-col gap-3 rounded-md p-3">
             {credentials.map((cred, id) => (
-              <>
-                <li
-                  key={id}
-                  className="bg-white border border-gray-200 p-4 rounded-lg flex items-center justify-between shadow-sm hover:shadow-md transition-shadow"
-                >
+              <div key={id}>
+                <li className="bg-white border border-gray-200 p-4 rounded-lg flex items-center justify-between shadow-sm hover:shadow-md transition-shadow">
                   <div>
                     <div className="font-semibold text-gray-800">
                       {cred.type}
@@ -58,7 +51,7 @@ const Credentials = () => {
                     <div className="text-xs text-gray-500">ID: {cred.id}</div>
                   </div>
                 </li>
-              </>
+              </div>
             ))}
           </ul>
         )}

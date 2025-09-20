@@ -71,9 +71,9 @@ async function main() {
       const nodeMetadata = currentNode.metadata as JsonObject;
       const userId = workflowDetails.userId;
 
-      // console.log("Node data ", nodeData);
-      // console.log("Node metadata ", nodeMetadata);
-      // console.log("User id ", userId);
+      console.log("Node data ", nodeData);
+      console.log("Node metadata ", nodeMetadata);
+      console.log("User id ", userId);
 
       let nodeResult: ExecutionResult = { success: true };
 

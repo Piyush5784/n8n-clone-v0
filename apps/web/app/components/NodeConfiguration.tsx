@@ -5,7 +5,6 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { BACKEND_URL, TOKEN } from "../config";
 
-// Node Configuration Modal Component
 interface NodeConfigurationModalProps {
   isOpen: boolean;
   onClose: () => void;

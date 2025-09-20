@@ -198,7 +198,7 @@ router.post("/update", authMiddleware, async (req, res) => {
                   },
                 },
                 id: node.id,
-                metadata: null,
+                metadata: node.data.metadata || null,
               })),
             }),
           ]

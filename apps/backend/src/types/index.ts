@@ -1,15 +1,14 @@
 import { z } from "zod";
 
 export const SigninSchema = z.object({
-  username: z.string(),
+  email: z.string().email(),
   password: z.string().min(4),
-  email: z.email(),
 });
 
 export const SignupSchema = z.object({
-  username: z.string(),
+  username: z.string().min(2),
+  email: z.string().email(),
   password: z.string().min(4),
-  email: z.email(),
 });
 
 export const createWorkflow = z.object({
@@ -35,6 +34,7 @@ export const updateWorkflowSchema = z.object({
       data: z.object({
         label: z.enum(["trigger", "webhook", "sendEmail", "sendTelegram"]),
         webhookId: z.string(),
+        metadata: z.any().optional(),
       }),
       position: z.object({
         x: z.number(),

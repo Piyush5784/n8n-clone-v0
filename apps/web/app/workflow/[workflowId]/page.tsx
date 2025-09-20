@@ -28,6 +28,7 @@ import { NodeConfigurationModal } from "../../components/NodeConfiguration";
 import axios from "axios";
 import { v4 } from "uuid";
 import ExecuteButton from "../../components/ExecuteButton";
+import Link from "next/link";
 export interface customNode {
   id: string;
   data: {
@@ -45,7 +46,7 @@ interface availableWebhook {
 }
 
 function getRandomNumber() {
-  return Math.floor(Math.random() * 10);
+  return Math.floor(Math.random() * 10) - 4;
 }
 
 const initialNodes: customNode[] = [];
@@ -203,8 +204,8 @@ function Flow() {
       id: v4(),
       data: { label: type, webhookId },
       position: {
-        x: getRandomNumber() * 100 + nodes.length * 200,
-        y: getRandomNumber() * 50 + 50,
+        x: 0,
+        y: 100,
       },
     };
     setNodes((n) => [...n, data]);
@@ -257,11 +258,14 @@ function Flow() {
   return (
     <div className="h-screen bg-gray-50">
       <div className="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
-        <h1 className="text-2xl font-semibold text-gray-800">
+        <div className="text-2xl font-semibold text-gray-800">
           Workflow Builder
           <span className="text-sm text-gray-500 ml-2">ID: {workflowId}</span>
-        </h1>
+        </div>
         <div className="flex">
+          <Link href={"/dashboard"}>
+            <Button variant="light">Go to dashboard</Button>
+          </Link>
           <Button variant="default" onClick={onSave} className="px-6 py-2">
             Save
           </Button>

@@ -1,35 +1,41 @@
 import { Button } from "./Buttons";
 import Link from "next/link";
+import LogoutButton from "./LogoutButton";
+import { Activity, KeyRound, Monitor, Workflow } from "lucide-react";
 
 const Sidebar = () => {
   const menuItems = [
-    { name: "Dashboard", href: "/dashboard", icon: "📊" },
-    { name: "Workflows", href: "/dashboard", icon: "⚡" },
-    { name: "Credentials", href: "/credentials", icon: "🔑" },
-    { name: "Executions", href: "/executions", icon: "📝" },
+    { name: "Workflows", href: "/dashboard", icon: <Workflow /> },
+    { name: "Credentials", href: "/credentails", icon: <KeyRound /> },
+    // { name: "Executions", href: "/executions", icon: <Activity /> },
   ];
 
   return (
-    <div className="w-64 bg-gray-50 border-r border-gray-200 h-full flex flex-col">
+    <div className="w-64 bg-white border-r border-gray-200 h-full flex flex-col shadow-sm">
+      {/* Dashboard Header */}
+      <div className="px-6 py-4 border-b border-gray-100">
+        <h1 className="text-xl font-bold text-gray-900">Dashboard</h1>
+      </div>
+
+      {/* Navigation Menu */}
       <div className="flex-1 px-4 py-6">
-        <div className="space-y-1">
+        <nav className="space-y-2">
           {menuItems.map((item, index) => (
             <Link
               key={index}
               href={item.href}
-              className="group flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-colors duration-150"
+              className="group flex items-center px-4 py-3 text-sm font-medium rounded-lg text-gray-700 hover:text-gray-900 hover:bg-blue-50 hover:border-blue-200 transition-all duration-200 border border-transparent"
             >
               <span className="mr-3 text-lg">{item.icon}</span>
               {item.name}
             </Link>
           ))}
-        </div>
+        </nav>
       </div>
 
-      <div className="px-4 py-4 border-t border-gray-200">
-        <Button variant="red" className="w-full">
-          Logout
-        </Button>
+      {/* Logout Section */}
+      <div className="px-4 py-4 border-t border-gray-100">
+        <LogoutButton />
       </div>
     </div>
   );

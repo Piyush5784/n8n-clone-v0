@@ -1,6 +1,6 @@
 import { PrismaClient } from "@repo/db/client";
 import e, { Router } from "express";
-import { SigninSchema } from "../types/index";
+import { SigninSchema, SignupSchema } from "../types/index";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../config";
@@ -9,7 +9,7 @@ const router = Router();
 const prisma = new PrismaClient();
 router.post("/signup", async (req, res) => {
   try {
-    const parsedData = SigninSchema.safeParse(req.body);
+    const parsedData = SignupSchema.safeParse(req.body);
 
     if (!parsedData.success) {
       return res.status(400).json({
@@ -53,9 +53,12 @@ router.post("/signin", async (req, res) => {
   try {
     const parsedData = SigninSchema.safeParse(req.body);
 
+    console.log(parsedData);
+
     if (!parsedData.success) {
       return res.status(400).json({
         message: "Invalid data",
+        error: parsedData.error.issues,
       });
     }
     const data = parsedData.data;
