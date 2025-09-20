@@ -1,0 +1,9 @@
+{
+  "name": "@repo/types",
+  "version": "0.0.0",
+  "main": "./shared.ts",
+  "types": "./shared.ts",
+  "exports": {
+    ".": "./shared.ts"
+  }
+}

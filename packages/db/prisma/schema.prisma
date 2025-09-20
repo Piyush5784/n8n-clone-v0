@@ -1,0 +1,92 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(uuid(4)) @map("_id")
+  username String
+  password String
+  email    String @unique
+
+  credentails Credentials[]
+  workflow Workflow[]
+}
+
+model Workflow {
+  id          String  @id @default(uuid(4)) @map("_id")
+  title       String
+  description String?
+  nodes       Node[]
+  edges       Json?
+
+  execution Executions[]
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+
+enum Status {
+  Failed
+  Processing
+  Success
+}
+
+model Executions {
+  id         String   @id @default(uuid(4)) @map("_id")
+  status     Status
+  failedReason  String?
+  workflowId String
+  workflow   Workflow @relation(fields: [workflowId], references: [id])
+
+  exectionsOutbox ExecutionsOutbox?
+}
+
+model ExecutionsOutbox {
+  id          String     @id @default(uuid(4)) @map("_id")
+  executionId String     @unique
+  execution   Executions @relation(fields: [executionId], references: [id])
+}
+
+model Node {
+  id       String   @id @default(uuid(4)) @map("_id")
+  data     Json
+  metadata Json?
+  webhook  Webhook?
+
+  workflowId String
+  workflow   Workflow @relation(fields: [workflowId], references: [id])
+}
+
+model Webhook {
+  id     String @id @default(uuid(4)) @map("_id")
+  nodeId String @unique
+  node   Node   @relation(fields: [nodeId], references: [id])
+
+  avalilabelWebhookId String
+  avalilabelWebhook   AvailabeWebhook @relation(fields: [avalilabelWebhookId], references: [id])
+}
+
+model AvailabeWebhook {
+  id      String    @id @default(uuid(4)) @map("_id")
+  type    String
+  image   String
+  webhook Webhook[]
+}
+
+model Credentials {
+  id   String @id @default(uuid(4)) @map("_id")
+  type String
+  data Json?
+
+
+  userId   String
+  user     User   @relation(fields: [userId],references: [id])
+}
+
+
