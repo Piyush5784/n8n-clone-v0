@@ -29,6 +29,7 @@ import axios from "axios";
 import { v4 } from "uuid";
 import ExecuteButton from "../../components/ExecuteButton";
 import Link from "next/link";
+import { WorkflowSidebar } from "../../components/WorkflowSidebar";
 export interface customNode {
   id: string;
   data: {
@@ -257,6 +258,7 @@ function Flow() {
 
   return (
     <div className="h-screen bg-gray-50">
+      <WorkflowSidebar workflowId={workflowId} />
       <div className="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
         <div className="text-2xl font-semibold text-gray-800">
           Workflow Builder

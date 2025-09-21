@@ -9,13 +9,11 @@ export const useAuth = () => {
   const router = useRouter();
 
   useEffect(() => {
-    // This ensures we only access localStorage on the client side
     if (typeof window !== "undefined") {
       const storedToken = localStorage.getItem("token");
       setToken(storedToken);
       setIsLoading(false);
 
-      // If no token is found, redirect to signin
       if (!storedToken) {
         router.push("/signin");
       }

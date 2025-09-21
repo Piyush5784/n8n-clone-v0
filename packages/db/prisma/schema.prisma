@@ -44,6 +44,8 @@ model Executions {
   workflowId String
   workflow   Workflow @relation(fields: [workflowId], references: [id])
 
+  createdAt  DateTime  @default(now())
+
   exectionsOutbox ExecutionsOutbox?
 }
 

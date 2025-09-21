@@ -5,11 +5,8 @@ export const getToken = () => {
     return "";
   }
   const token = localStorage.getItem("token");
-  console.log(token);
 
   if (!token) {
-    console.log(!token);
-    window.location.href = "/signin";
     return "";
   }
 

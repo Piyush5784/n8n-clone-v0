@@ -6,6 +6,7 @@ import Loader from "../../../components/Loader";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { useAuth } from "../../../hooks/useAuth";
+import { BACKEND_URL, BACKEND_URL_HOOKS } from "../../../config";
 
 interface Workflow {
   id: string;
@@ -107,6 +108,9 @@ const Page = () => {
                 Description
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                URL
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                 Nodes
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
@@ -129,6 +133,9 @@ const Page = () => {
                   {workflow.description || (
                     <span className="text-gray-400">No description</span>
                   )}
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-600 w-[20px] overflow-hidden">
+                  {`${BACKEND_URL_HOOKS}/workflow/execute/${workflow.id}`}
                 </td>
                 <td className="px-6 py-4">
                   <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">

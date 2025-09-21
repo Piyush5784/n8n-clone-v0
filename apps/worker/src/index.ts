@@ -7,6 +7,7 @@ import {
   sendTelegramMsg,
   ExecutionResult,
 } from "./helper";
+import { execute } from "./agentTool";
 
 const prisma = new PrismaClient();
 const TOPIC_NAME = "zap-events";
@@ -77,6 +78,21 @@ async function main() {
 
       let nodeResult: ExecutionResult = { success: true };
 
+      if (nodeData?.label === "AiAgent") {
+        console.log("Processing an ai agent call");
+
+        const var1 = parseTemplate(
+          (nodeMetadata?.var1 as string) || "No variable a found",
+          nodeMetadata
+        );
+
+        const var2 = parseTemplate(
+          (nodeMetadata?.var1 as string) || "No variable a found",
+          nodeMetadata
+        );
+
+        nodeResult = await execute(var1, var2);
+      }
       if (nodeData?.label === "sendEmail") {
         const subject = parseTemplate(
           (nodeMetadata?.subject as string) || "No Subject",

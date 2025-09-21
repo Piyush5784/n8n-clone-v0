@@ -16,6 +16,8 @@
     "@types/nodemailer": "^7.0.1"
   },
   "dependencies": {
+    "@ai-sdk/google": "^2.0.14",
+    "ai": "^5.0.48",
     "axios": "^1.12.2",
     "kafkajs": "^2.2.4",
     "node-telegram-bot-api": "^0.66.0",
