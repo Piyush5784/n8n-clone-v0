@@ -43,7 +43,7 @@ export interface customNode {
 interface availableWebhook {
   id: string;
   image: string;
-  type: "trigger" | "webhook" | "sendEmail" | "sendTelegram";
+  type: "trigger" | "webhook" | "sendEmail" | "sendTelegram" | "AiAgent";
 }
 
 function getRandomNumber() {
@@ -68,7 +68,7 @@ function Flow() {
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
   const [selectedNodeId, setSelectedNodeId] = useState<string>("");
   const [selectedNodeType, setSelectedNodeType] = useState<
-    "trigger" | "webhook" | "sendEmail" | "sendTelegram"
+    "trigger" | "webhook" | "sendEmail" | "sendTelegram" | "AiAgent"
   >("webhook");
   const [avaliableWebhook, setAvliableWebhooks] = useState<availableWebhook[]>(
     []
@@ -80,7 +80,7 @@ function Flow() {
     (event: React.MouseEvent, node: Node) => {
       setSelectedNodeId(node.id);
       const nodeData = node.data as {
-        label: "trigger" | "webhook" | "sendEmail" | "sendTelegram";
+        label: "trigger" | "webhook" | "sendEmail" | "sendTelegram" | "AiAgent";
       };
       setSelectedNodeType(nodeData.label);
 
@@ -179,7 +179,7 @@ function Flow() {
   );
 
   function addNode(
-    type: "trigger" | "webhook" | "sendEmail" | "sendTelegram",
+    type: "trigger" | "webhook" | "sendEmail" | "sendTelegram" | "AiAgent",
     webhookId: string
   ) {
     // Check if this is the first node and enforce trigger/webhook rule
@@ -200,6 +200,14 @@ function Flow() {
         return;
       }
     }
+
+    // // Add AiAgent to available webhooks if not present
+    // if (
+    //   type === "AiAgent" &&
+    //   !avaliableWebhook.some((hook) => hook.type === "AiAgent")
+    // ) {
+    //   // Handle AiAgent node creation
+    // }
 
     const data: customNode = {
       id: v4(),
@@ -394,6 +402,7 @@ function Flow() {
                             | "trigger"
                             | "webhook"
                             | "sendEmail"
+                            | "AiAgent"
                             | "sendTelegram" = "trigger";
 
                           switch (hook.type) {
@@ -408,6 +417,9 @@ function Flow() {
                               break;
                             case "sendTelegram":
                               nodeType = "sendTelegram";
+                              break;
+                            case "AiAgent":
+                              nodeType = "AiAgent";
                               break;
                             default:
                               nodeType = "webhook";

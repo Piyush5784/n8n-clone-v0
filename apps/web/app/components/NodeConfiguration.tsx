@@ -257,6 +257,130 @@ export const NodeConfigurationModal: React.FC<NodeConfigurationModalProps> = ({
           </div>
         );
 
+      case "AiAgent":
+        return (
+          <div>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  var 1
+                </label>
+                <input
+                  type="number"
+                  value={configuration.var1 || ""}
+                  onChange={(e) =>
+                    setConfiguration({ ...configuration, var1: e.target.value })
+                  }
+                  placeholder="eg:12"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  var2
+                </label>
+                <input
+                  type="text"
+                  value={configuration.var2 || ""}
+                  onChange={(e) =>
+                    setConfiguration({
+                      ...configuration,
+                      var2: e.target.value,
+                    })
+                  }
+                  placeholder="eg:15"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Send Response
+                </label>
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id="sendResponse"
+                    checked={configuration.sendResponse || false}
+                    onChange={(e) =>
+                      setConfiguration({
+                        ...configuration,
+                        sendResponse: e.target.checked,
+                      })
+                    }
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                  />
+                  <label
+                    htmlFor="sendResponse"
+                    className="ml-2 text-sm text-gray-600"
+                  >
+                    Enable response sending
+                  </label>
+                </div>
+                {configuration.sendResponse && (
+                  <div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Action Type
+                      </label>
+                      <select
+                        value={configuration.actionType || ""}
+                        onChange={(e) =>
+                          setConfiguration({
+                            ...configuration,
+                            actionType: e.target.value,
+                          })
+                        }
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="">Select action</option>
+                        <option value="email">Send Email</option>
+                        <option value="telegram">Send Telegram</option>
+                      </select>
+                    </div>
+                    {configuration.actionType === "email" && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          To Email
+                        </label>
+                        <input
+                          type="email"
+                          value={configuration.to || ""}
+                          onChange={(e) =>
+                            setConfiguration({
+                              ...configuration,
+                              to: e.target.value,
+                            })
+                          }
+                          placeholder="recipient@example.com"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                    )}
+                    {configuration.actionType === "telegram" && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Chat ID
+                        </label>
+                        <input
+                          type="text"
+                          value={configuration.chatId || ""}
+                          onChange={(e) =>
+                            setConfiguration({
+                              ...configuration,
+                              chatId: e.target.value,
+                            })
+                          }
+                          placeholder="Telegram chat ID"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        );
       default:
         return (
           <div className="text-center py-8">

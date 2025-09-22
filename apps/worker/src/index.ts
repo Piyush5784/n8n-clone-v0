@@ -87,11 +87,35 @@ async function main() {
         );
 
         const var2 = parseTemplate(
-          (nodeMetadata?.var1 as string) || "No variable a found",
+          (nodeMetadata?.var2 as string) || "No variable a found",
           nodeMetadata
         );
 
+        console.log({
+          var1,
+          var2,
+        });
+
         nodeResult = await execute(var1, var2);
+
+        console.log(nodeResult);
+
+        if (nodeMetadata.sendResponse) {
+          if (nodeMetadata.actionType == "email") {
+            await sendEmail(
+              userId,
+              nodeMetadata.to as string,
+              "Ai result",
+              JSON.stringify(nodeResult.successResponse)
+            );
+          }
+          if (nodeMetadata.actionType == "telegram") {
+            await sendTelegramMsg(userId, {
+              ...nodeMetadata,
+              message: JSON.stringify(nodeResult.successResponse),
+            });
+          }
+        }
       }
       if (nodeData?.label === "sendEmail") {
         const subject = parseTemplate(

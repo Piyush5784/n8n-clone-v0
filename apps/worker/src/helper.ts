@@ -1,6 +1,7 @@
 import { JsonObject } from "@prisma/client/runtime/library";
 import { PrismaClient } from "@repo/db/client";
 import axios from "axios";
+import { Json } from "langchain/tools";
 import TelegramBot from "node-telegram-bot-api";
 import nodemailer from "nodemailer";
 
@@ -9,6 +10,7 @@ const prisma = new PrismaClient();
 export interface ExecutionResult {
   success: boolean;
   failedReason?: string;
+  successResponse?: any;
 }
 
 export function parseTemplate(template: string, metadata: JsonObject): string {

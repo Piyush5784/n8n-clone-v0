@@ -17,9 +17,12 @@
   },
   "dependencies": {
     "@ai-sdk/google": "^2.0.14",
+    "@langchain/google-genai": "^0.2.18",
+    "@langchain/langgraph": "^0.4.9",
     "ai": "^5.0.48",
     "axios": "^1.12.2",
     "kafkajs": "^2.2.4",
+    "langchain": "^0.3.34",
     "node-telegram-bot-api": "^0.66.0",
     "nodemailer": "^7.0.6"
   }

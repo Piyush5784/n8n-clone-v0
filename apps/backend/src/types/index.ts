@@ -19,7 +19,7 @@ export const createWorkflow = z.object({
 export interface CustomNode {
   id: string;
   data: {
-    label: "trigger" | "webhook" | "sendEmail" | "sendTelegram";
+    label: "trigger" | "webhook" | "sendEmail" | "sendTelegram" | "AiAgent";
     webhookId: string;
     metadata?: any;
   };
@@ -32,7 +32,13 @@ export const updateWorkflowSchema = z.object({
     z.object({
       id: z.string(),
       data: z.object({
-        label: z.enum(["trigger", "webhook", "sendEmail", "sendTelegram"]),
+        label: z.enum([
+          "trigger",
+          "webhook",
+          "sendEmail",
+          "sendTelegram",
+          "AiAgent",
+        ]),
         webhookId: z.string(),
         metadata: z.any().optional(),
       }),
