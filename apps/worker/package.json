@@ -11,7 +11,9 @@
   "license": "ISC",
   "devDependencies": {
     "@types/axios": "^0.9.36",
+    "@types/imap": "^0.8.42",
     "@types/kafkajs": "^1.8.2",
+    "@types/mailparser": "^3.4.6",
     "@types/node-telegram-bot-api": "^0.64.11",
     "@types/nodemailer": "^7.0.1"
   },
@@ -21,8 +23,10 @@
     "@langchain/langgraph": "^0.4.9",
     "ai": "^5.0.48",
     "axios": "^1.12.2",
+    "imap": "^0.8.19",
     "kafkajs": "^2.2.4",
     "langchain": "^0.3.34",
+    "mailparser": "^3.7.4",
     "node-telegram-bot-api": "^0.66.0",
     "nodemailer": "^7.0.6"
   }

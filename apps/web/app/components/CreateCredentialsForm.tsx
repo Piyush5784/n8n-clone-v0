@@ -160,7 +160,7 @@ const CreateCredentialsForm = ({
   const renderEmailForm = () => (
     <>
       <div className="mb-4">
-        <label htmlFor="title" className="block text-sm font-medium mb-2">
+        <label htmlFor="title" className="block  text-sm font-medium mb-2">
           Credentials Title
         </label>
         <input
@@ -319,7 +319,7 @@ const CreateCredentialsForm = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-800/60">
       <div className="bg-white rounded-lg p-6 w-full border max-w-md">
         <h2 className="text-xl font-semibold mb-4">Create New Credentials</h2>
 

@@ -14,6 +14,8 @@ interface Execution {
 
 interface WorkflowSidebarProps {
   workflowId: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export const WorkflowSidebar = ({ workflowId }: WorkflowSidebarProps) => {

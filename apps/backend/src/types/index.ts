@@ -1,5 +1,11 @@
 import { z } from "zod";
 
+import {
+  AvailableWebhook,
+  CustomNode,
+  hookType,
+  hookTypesArr,
+} from "@repo/types";
 export const SigninSchema = z.object({
   email: z.string().email(),
   password: z.string().min(4),
@@ -16,29 +22,13 @@ export const createWorkflow = z.object({
   description: z.string().optional(),
 });
 
-export interface CustomNode {
-  id: string;
-  data: {
-    label: "trigger" | "webhook" | "sendEmail" | "sendTelegram" | "AiAgent";
-    webhookId: string;
-    metadata?: any;
-  };
-  position: { x: number; y: number };
-}
-
 export const updateWorkflowSchema = z.object({
   workflowId: z.string(),
   nodes: z.array(
     z.object({
       id: z.string(),
       data: z.object({
-        label: z.enum([
-          "trigger",
-          "webhook",
-          "sendEmail",
-          "sendTelegram",
-          "AiAgent",
-        ]),
+        label: z.enum(hookTypesArr),
         webhookId: z.string(),
         metadata: z.any().optional(),
       }),

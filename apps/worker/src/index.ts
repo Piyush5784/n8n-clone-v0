@@ -8,6 +8,7 @@ import {
   ExecutionResult,
 } from "./helper";
 import { execute } from "./agentTool";
+import { sendAndAwait } from "./send-await";
 
 const prisma = new PrismaClient();
 const TOPIC_NAME = "zap-events";
@@ -18,7 +19,16 @@ const kafka = new Kafka({
 });
 
 async function main() {
-  const consumer = kafka.consumer({ groupId: "main-worker" });
+  const consumer = kafka.consumer({
+    groupId: "main-worker",
+    sessionTimeout: 60000, // Must be between 6000 and 300000 ms
+    heartbeatInterval: 3000, // Must be between 300 and 30000 ms
+    maxWaitTimeInMs: 5000, // Must be between 1 and 300000 ms
+    retry: {
+      initialRetryTime: 300, // Must be >= 0
+      retries: 8,
+    },
+  });
   await consumer.connect();
   const producer = kafka.producer();
   await producer.connect();
@@ -139,6 +149,19 @@ async function main() {
       if (nodeData?.label === "sendTelegram") {
         console.log(`Processing Telegram node: sending message`);
         nodeResult = await sendTelegramMsg(userId, nodeMetadata);
+      }
+
+      if (nodeData?.label === "sendAndAwait") {
+        const to = parseTemplate(
+          (nodeMetadata?.to as string) || "",
+          nodeMetadata
+        );
+
+        console.log(to);
+
+        nodeResult = await sendAndAwait(userId, to);
+
+        console.log({ nodeResult });
       }
 
       if (!nodeResult.success) {

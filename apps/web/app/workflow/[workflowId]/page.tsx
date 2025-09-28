@@ -19,7 +19,7 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { Button } from "../../components/Buttons";
-import { getWebhooks } from "../../helpers/function";
+import { getWebhooks, webhookType } from "../../helpers/function";
 import toast from "react-hot-toast";
 import { BACKEND_URL, TOKEN } from "../../config";
 import Credentials from "../../components/Credentials";
@@ -30,27 +30,10 @@ import { v4 } from "uuid";
 import ExecuteButton from "../../components/ExecuteButton";
 import Link from "next/link";
 import { WorkflowSidebar } from "../../components/WorkflowSidebar";
-export interface customNode {
-  id: string;
-  data: {
-    label: string;
-    webhookId: string;
-    metadata?: any;
-  };
-  position: { x: number; y: number };
-}
+import { Search } from "lucide-react";
+import { AvailableWebhook, CustomNode, hookType } from "@repo/types";
 
-interface availableWebhook {
-  id: string;
-  image: string;
-  type: "trigger" | "webhook" | "sendEmail" | "sendTelegram" | "AiAgent";
-}
-
-function getRandomNumber() {
-  return Math.floor(Math.random() * 10) - 4;
-}
-
-const initialNodes: customNode[] = [];
+const initialNodes: CustomNode[] = [];
 const initialEdges: Edge[] = [];
 
 const fitViewOptions: FitViewOptions = {
@@ -70,12 +53,12 @@ function Flow() {
   const [selectedNodeType, setSelectedNodeType] = useState<
     "trigger" | "webhook" | "sendEmail" | "sendTelegram" | "AiAgent"
   >("webhook");
-  const [avaliableWebhook, setAvliableWebhooks] = useState<availableWebhook[]>(
+  const [avaliableWebhook, setAvliableWebhooks] = useState<AvailableWebhook[]>(
     []
   );
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
   const [selectedNodeForConfig, setSelectedNodeForConfig] =
-    useState<customNode | null>(null);
+    useState<CustomNode | null>(null);
   const onNodeClick = useCallback(
     (event: React.MouseEvent, node: Node) => {
       setSelectedNodeId(node.id);
@@ -87,7 +70,7 @@ function Flow() {
       // Find the custom node and open configuration modal
       const customNode = nodes.find((n) => n.id === node.id);
       if (customNode) {
-        setSelectedNodeForConfig(customNode as customNode);
+        setSelectedNodeForConfig(customNode as CustomNode);
         setIsConfigModalOpen(true);
       }
     },
@@ -154,7 +137,7 @@ function Flow() {
       try {
         const data = await getWebhooks();
         const webhooks =
-          (data as { webhooks?: availableWebhook[] }).webhooks || [];
+          (data as { webhooks?: AvailableWebhook[] }).webhooks || [];
 
         setAvliableWebhooks(webhooks);
       } catch (error) {
@@ -178,10 +161,7 @@ function Flow() {
     []
   );
 
-  function addNode(
-    type: "trigger" | "webhook" | "sendEmail" | "sendTelegram" | "AiAgent",
-    webhookId: string
-  ) {
+  function addNode(type: hookType, webhookId: string) {
     // Check if this is the first node and enforce trigger/webhook rule
     if (nodes.length === 0 && type !== "trigger" && type !== "webhook") {
       toast.error("First node must be trigger or webhook");
@@ -209,7 +189,7 @@ function Flow() {
     //   // Handle AiAgent node creation
     // }
 
-    const data: customNode = {
+    const data: CustomNode = {
       id: v4(),
       data: { label: type, webhookId },
       position: {
@@ -353,19 +333,8 @@ function Flow() {
           <div className="p-6 border-b border-gray-200">
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg
-                  className="h-5 w-5 text-gray-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
+                ...
+                <Search className="h-5 w-5 text-gray-400" />
               </div>
               <input
                 type="text"
@@ -397,34 +366,8 @@ function Flow() {
                         key={hook.id}
                         className="group p-4 rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-sm cursor-pointer transition-all duration-200 bg-white hover:bg-blue-50"
                         onClick={() => {
-                          // Map the webhook type to the node type
-                          let nodeType:
-                            | "trigger"
-                            | "webhook"
-                            | "sendEmail"
-                            | "AiAgent"
-                            | "sendTelegram" = "trigger";
-
-                          switch (hook.type) {
-                            case "trigger":
-                              nodeType = "trigger";
-                              break;
-                            case "webhook":
-                              nodeType = "webhook";
-                              break;
-                            case "sendEmail":
-                              nodeType = "sendEmail";
-                              break;
-                            case "sendTelegram":
-                              nodeType = "sendTelegram";
-                              break;
-                            case "AiAgent":
-                              nodeType = "AiAgent";
-                              break;
-                            default:
-                              nodeType = "webhook";
-                          }
-                          addNode(nodeType, hook.id);
+                          const ndeType = webhookType(hook) as hookType;
+                          addNode(ndeType, hook.id);
                         }}
                       >
                         <div className="flex items-center">

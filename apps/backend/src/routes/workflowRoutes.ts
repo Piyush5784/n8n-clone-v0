@@ -1,7 +1,8 @@
 import { PrismaClient } from "@repo/db/client";
 import { Router } from "express";
 import { authMiddleware } from "../middleware/authMiddleware";
-import { createWorkflow, updateWorkflowSchema, CustomNode } from "../types";
+import { createWorkflow, updateWorkflowSchema } from "../types";
+import { CustomNode } from "@repo/types";
 
 const router = Router();
 const prisma = new PrismaClient();
