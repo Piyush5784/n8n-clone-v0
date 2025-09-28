@@ -8,6 +8,8 @@
 
 
 
+# Setup Guidelines will be updated soon...
+
 
 # Turborepo starter
 
