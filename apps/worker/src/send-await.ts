@@ -6,9 +6,6 @@ import { randomUUID } from "crypto";
 import { ExecutionResult, getCredentials } from "./helper";
 import { JsonObject } from "@prisma/client/runtime/library";
 
-const GMAIL = process.env.GMAIL!;
-const GMAIL_PASS = process.env.GMAIL_PASS!;
-
 let emailId: string;
 const processedEmails = new Set<string>();
 
