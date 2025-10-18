@@ -80,7 +80,7 @@ export const Button = ({
 
   return (
     <button
-      style={{ ...commonStyles, ...variantStyle, ...style }}
+      style={{ ...commonStyles, ...variantStyle, ...style, cursor: "pointer" }}
       onClick={onClick}
     >
       {children}

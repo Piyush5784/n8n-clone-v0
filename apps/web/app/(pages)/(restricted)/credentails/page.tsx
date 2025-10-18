@@ -275,7 +275,7 @@ const Credentials = () => {
                     <button
                       onClick={handleUpdate}
                       disabled={loading}
-                      className="flex-1 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg transition-colors"
+                      className="flex-1 flex cursor-pointer items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg transition-colors"
                     >
                       <Save className="h-4 w-4" />
                       {loading ? "Saving..." : "Save Changes"}

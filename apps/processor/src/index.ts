@@ -32,7 +32,7 @@ async function main() {
           value: JSON.stringify({
             workflowId: r.execution.workflowId,
             executionId: r.executionId,
-            stage: 1,
+            stage: 0,
           }),
         })),
       });
