@@ -3,18 +3,21 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { SigninSchema } from "@repo/types";
-import { User, Lock, Mail } from "lucide-react";
+import { User, Lock, Mail, Eye, EyeOff } from "lucide-react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { BACKEND_URL } from "../../config";
-import Topbar from "@repo/ui/topbar";
-
+import Topbar from "@/components/navbar";
+import { Input } from "@/components/ui/input";
+import Link from "next/link";
+import { Button } from "@/components/Buttons";
 export default function SignInPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
@@ -81,7 +84,7 @@ export default function SignInPage() {
         <Topbar />
       </div>
 
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 pt-5 px-4">
+      <div className="min-h-screen flex items-center justify-center bg-gray-100 py-12 pt-5 px-4">
         <div className="max-w-md w-full space-y-8">
           {" "}
           <div className="text-center">
@@ -98,14 +101,14 @@ export default function SignInPage() {
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                  <input
+                  <Input
                     type="email"
                     value={formData.email}
                     onChange={(e) =>
                       setFormData({ ...formData, email: e.target.value })
                     }
                     placeholder="Enter your email"
-                    className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
+                    className={`w-full pl-10 pr-4 py-3 border  focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
                       errors.email ? "border-red-300" : "border-gray-300"
                     }`}
                     required
@@ -122,19 +125,26 @@ export default function SignInPage() {
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                  <input
+                  <Input
                     type="password"
                     value={formData.password}
                     onChange={(e) =>
                       setFormData({ ...formData, password: e.target.value })
                     }
                     placeholder="Enter your password"
-                    className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
+                    className={`w-full pl-10 pr-4 py-3 border  focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
                       errors.password ? "border-red-300" : "border-gray-300"
                     }`}
                     required
                     minLength={4}
                   />
+                  <div onClick={() => setShowPassword(!showPassword)}>
+                    {showPassword ? (
+                      <Eye className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                    ) : (
+                      <EyeOff className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                    )}
+                  </div>
                 </div>
                 {errors.password && (
                   <p className="text-xs text-red-500">{errors.password}</p>
@@ -142,22 +152,25 @@ export default function SignInPage() {
               </div>
             </div>
 
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              {isLoading ? "Signing In..." : "Sign In"}
-            </button>
+            <div className="flex items-center justify-end w-full">
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full"
+                // className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+              >
+                {isLoading ? "Signing In..." : "Sign In"}
+              </Button>
+            </div>
 
-            <p className="text-center text-sm text-gray-600">
+            <p className="text-center text-sm  text-gray-600">
               Don't have an account?{" "}
-              <a
+              <Link
                 href="/signup"
-                className="font-medium text-blue-600 hover:text-blue-500"
+                className=" text-blue-500 font-medium hover:text-blue-500"
               >
                 Sign up
-              </a>
+              </Link>
             </p>
           </form>
         </div>

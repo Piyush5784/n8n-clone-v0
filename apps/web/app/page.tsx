@@ -1,48 +1,70 @@
 import React from "react";
 import {
-  Menu,
-  X,
-  User,
-  LogIn,
-  LayoutDashboard,
-  Zap,
-  Shield,
-  Headphones,
   ArrowRight,
   CheckCircle,
+  Mail,
+  MessageCircle,
+  Brain,
+  GitBranch,
+  Workflow,
+  Send,
 } from "lucide-react";
-import Navbar from "@repo/ui/topbar";
+import Navbar from "./components/navbar";
+import Link from "next/link";
 
 export default function LandingPage() {
   const features = [
     {
-      title: "Lightning Fast",
+      title: "Email Automation",
       description:
-        "Experience blazing fast performance with our optimized infrastructure powered by cutting-edge technology.",
-      icon: Zap,
+        "Send automated emails with custom templates, attachments, and dynamic content. Perfect for notifications, marketing campaigns, and user engagement.",
+      icon: Mail,
       gradient: "from-blue-500 to-blue-600",
     },
     {
-      title: "Secure & Reliable",
+      title: "Telegram Integration",
       description:
-        "Your data is protected with enterprise-grade security measures and 99.9% uptime guarantee.",
-      icon: Shield,
-      gradient: "from-blue-600 to-blue-700",
+        "Connect your workflows to Telegram bots. Send messages, photos, documents, and receive updates in real-time through Telegram channels.",
+      icon: MessageCircle,
+      gradient: "from-green-500 to-green-600",
     },
     {
-      title: "24/7 Support",
+      title: "AI-Powered Calculations",
       description:
-        "Get help whenever you need it with our dedicated support team and comprehensive documentation.",
-      icon: Headphones,
-      gradient: "from-blue-700 to-blue-800",
+        "Leverage artificial intelligence for complex calculations, data analysis, text processing, and intelligent decision-making in your workflows.",
+      icon: Brain,
+      gradient: "from-purple-500 to-purple-600",
+    },
+    {
+      title: "Send & Await",
+      description:
+        "Create sophisticated workflows with conditional logic. Send requests and wait for responses before proceeding to the next step.",
+      icon: Send,
+      gradient: "from-orange-500 to-orange-600",
+    },
+    {
+      title: "Visual Workflow Builder",
+      description:
+        "Design complex automation workflows with our intuitive drag-and-drop interface. No coding required - just connect the nodes and go.",
+      icon: Workflow,
+      gradient: "from-indigo-500 to-indigo-600",
+    },
+    {
+      title: "Conditional Branching",
+      description:
+        "Create smart workflows that adapt based on conditions. Route data through different paths based on custom logic and rules.",
+      icon: GitBranch,
+      gradient: "from-teal-500 to-teal-600",
     },
   ];
 
   const benefits = [
-    "Increase productivity by 300%",
-    "Reduce operational costs significantly",
-    "Scale effortlessly with growing demand",
-    "Integrate with existing tools seamlessly",
+    "Automate repetitive tasks and save hours daily",
+    "Connect 200+ apps and services seamlessly",
+    "Build complex workflows with visual drag-and-drop",
+    "Scale from simple automations to enterprise workflows",
+    "No coding required - business users can create workflows",
+    "Real-time monitoring and error handling built-in",
   ];
 
   return (
@@ -57,34 +79,34 @@ export default function LandingPage() {
             <div className="text-center">
               <div className="inline-flex items-center px-4 py-2 rounded-full bg-blue-100 text-blue-800 text-sm font-medium mb-8">
                 <span className="w-2 h-2 bg-blue-500 rounded-full mr-2 animate-pulse"></span>
-                Now available worldwide
+                Beta
               </div>
 
               <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-8 leading-tight">
-                Welcome to the
+                Automate Everything with
                 <span className="block bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 bg-clip-text text-transparent">
-                  Future of Work
+                  n8n Workflows
                 </span>
               </h1>
 
               <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-4xl mx-auto leading-relaxed">
-                Transform your business operations with our intelligent
-                platform. Built for modern teams who demand excellence,
-                security, and seamless collaboration.
+                Connect your apps, automate workflows, and build powerful
+                integrations with our visual workflow automation platform. Send
+                emails, integrate Telegram, perform AI calculations, and create
+                complex conditional workflows - all without code.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-                <button className="group px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-full font-semibold text-lg hover:from-blue-700 hover:to-blue-800 hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center space-x-2">
-                  <span>Get Started Free</span>
-                  <ArrowRight
-                    size={20}
-                    className="group-hover:translate-x-1 transition-transform duration-300"
-                  />
-                </button>
-
-                <button className="px-8 py-4 border-2 border-blue-200 text-blue-700 rounded-full font-semibold text-lg hover:border-blue-400 hover:bg-blue-50 hover:scale-105 transition-all duration-300">
-                  Watch Demo
-                </button>
+                <Link href={"/signin"}>
+                  {" "}
+                  <button className="group px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-full font-semibold text-lg hover:from-blue-700 hover:to-blue-800 hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center space-x-2">
+                    <span>Get Started Free</span>
+                    <ArrowRight
+                      size={20}
+                      className="group-hover:translate-x-1 transition-transform duration-300"
+                    />
+                  </button>
+                </Link>
               </div>
 
               <div className="mt-16 flex flex-wrap justify-center gap-8 text-sm text-gray-500">
@@ -110,27 +132,22 @@ export default function LandingPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-20">
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                Why Choose Our Platform?
+                Powerful Automation Features
               </h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Experience the perfect blend of power, simplicity, and
-                reliability that thousands of teams trust.
+                Everything you need to automate your workflows - from simple
+                email notifications to complex AI-powered processes and
+                multi-step conditional logic.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {features.map((feature, index) => (
                 <div
                   key={index}
-                  className="group bg-white rounded-3xl p-8 shadow-sm border border-blue-100 hover:shadow-xl hover:scale-105 hover:border-blue-200 transition-all duration-300"
+                  className="group bg-white rounded-3xl p-8 border border-blue-100 shadow-xl  border-blue-200 transition-all duration-300"
                 >
-                  <div
-                    className={`inline-flex p-4 rounded-2xl bg-gradient-to-r ${feature.gradient} mb-6`}
-                  >
-                    <feature.icon size={32} className="text-white" />
-                  </div>
-
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-blue-700 transition-colors duration-300">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4  transition-colors duration-300">
                     {feature.title}
                   </h3>
 
@@ -149,12 +166,13 @@ export default function LandingPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <div>
                 <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8">
-                  Transform Your Business Today
+                  Workflow Automation Made Simple
                 </h2>
                 <p className="text-xl text-gray-600 mb-12 leading-relaxed">
-                  Join thousands of forward-thinking companies who have
-                  revolutionized their operations with our platform. See
-                  immediate results and long-term growth.
+                  From sending automated emails to complex AI-powered
+                  calculations, our platform handles it all. Build workflows
+                  that connect your favorite tools and eliminate manual work
+                  forever.
                 </p>
 
                 <ul className="space-y-6 mb-12">
@@ -204,12 +222,13 @@ export default function LandingPage() {
         <section className="py-24 bg-gradient-to-r from-blue-600 to-blue-800 text-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-4xl md:text-5xl font-bold mb-8">
-              Ready to Transform Your Business?
+              Ready to Automate Your Workflows?
             </h2>
             <p className="text-xl text-blue-100 mb-12 max-w-3xl mx-auto leading-relaxed">
-              Join over 50,000+ companies already using our platform to drive
-              growth, increase efficiency, and stay ahead of the competition.
-              Start your journey today.
+              Start building powerful automations today. Connect your apps,
+              automate emails, integrate Telegram, perform AI calculations, and
+              create workflows that work while you sleep. No credit card
+              required.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
@@ -240,7 +259,7 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
             <div>
               <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-                Brand
+                FlowBoard
               </span>
               <p className="text-gray-400 mt-4">
                 Transforming businesses with innovative solutions since 2020.
@@ -312,7 +331,9 @@ export default function LandingPage() {
           </div>
 
           <div className="border-t border-gray-800 pt-8 text-center">
-            <p className="text-gray-400">© 2025 Brand. All rights reserved.</p>
+            <p className="text-gray-400">
+              © 2025 FlowBoard. All rights reserved.
+            </p>
           </div>
         </div>
       </footer>

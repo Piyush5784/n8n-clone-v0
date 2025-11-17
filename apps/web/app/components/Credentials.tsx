@@ -23,7 +23,8 @@ const Credentials = () => {
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-sm font-medium text-gray-900">Credentials</h3>
           <Button
-            variant="green"
+            variant="success"
+            size={"sm"}
             onClick={() => setOpenPopup(true)}
             className="text-xs px-3 py-1"
           >

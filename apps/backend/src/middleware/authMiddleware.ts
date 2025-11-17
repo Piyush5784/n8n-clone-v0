@@ -13,7 +13,7 @@ export async function authMiddleware(
     const authHeader = req.headers["authorization"];
     if (!authHeader) {
       return res.status(401).json({
-        message: "Unauthorized User",
+        message: "Unauthorized User 1",
       });
     }
 
@@ -33,7 +33,7 @@ export async function authMiddleware(
 
     if (!userId) {
       return res.status(401).json({
-        message: "Unauthorized User",
+        message: "Unauthorized User 2",
       });
     }
 
@@ -45,7 +45,7 @@ export async function authMiddleware(
 
     if (!user) {
       return res.status(401).json({
-        message: "Unauthorized User",
+        message: "Unauthorized User 3",
       });
     }
 
@@ -54,8 +54,9 @@ export async function authMiddleware(
 
     next();
   } catch (error) {
+    console.log(error);
     return res.status(401).json({
-      message: "Unauthorized User",
+      message: "Unauthorized User 4",
     });
   }
 }

@@ -11,26 +11,24 @@ import {
   type OnConnect,
   type OnNodesChange,
   type OnEdgesChange,
-  type OnNodeDrag,
   type DefaultEdgeOptions,
   Background,
   Controls,
   MiniMap,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { Button } from "../../components/Buttons";
-import { getWebhooks, webhookType } from "../../helpers/function";
+import { Button } from "@/components/Buttons";
+import { getWebhooks, webhookType } from "@/helpers/function";
 import toast from "react-hot-toast";
-import { BACKEND_URL, TOKEN } from "../../config";
-import Credentials from "../../components/Credentials";
+import { BACKEND_URL, TOKEN } from "@/config";
+import Credentials from "@/components/Credentials";
 import { useParams } from "next/navigation";
-import { NodeConfigurationModal } from "../../components/NodeConfiguration";
+import { NodeConfigurationModal } from "@/components/NodeConfiguration";
 import axios from "axios";
 import { v4 } from "uuid";
-import ExecuteButton from "../../components/ExecuteButton";
+import ExecuteButton from "@/components/ExecuteButton";
 import Link from "next/link";
-import { WorkflowSidebar } from "../../components/WorkflowSidebar";
-import { Search } from "lucide-react";
+import { WorkflowSidebar } from "@/components/WorkflowSidebar";
 import { AvailableWebhook, CustomNode, hookType } from "@repo/types";
 
 const initialNodes: CustomNode[] = [];
@@ -67,7 +65,6 @@ function Flow() {
       };
       setSelectedNodeType(nodeData.label);
 
-      // Find the custom node and open configuration modal
       const customNode = nodes.find((n) => n.id === node.id);
       if (customNode) {
         setSelectedNodeForConfig(customNode as CustomNode);
@@ -118,8 +115,6 @@ function Flow() {
                 setEdges([]);
               }
             }
-
-            toast.success("Workflow loaded successfully");
           } else {
             toast.error("Failed to fetch workflow");
           }
@@ -252,9 +247,9 @@ function Flow() {
           Workflow Builder
           <span className="text-sm text-gray-500 ml-2">ID: {workflowId}</span>
         </div>
-        <div className="flex">
+        <div className="flex gap-3">
           <Link href={"/dashboard"}>
-            <Button variant="light">Go to dashboard</Button>
+            <Button variant="outline">Go to dashboard</Button>
           </Link>
           <Button variant="default" onClick={onSave} className="px-6 py-2">
             Save
@@ -376,13 +371,6 @@ function Flow() {
                               src={hook.image}
                               alt={hook.type}
                               className="w-8 h-8 rounded object-cover"
-                              onError={(e) => {
-                                // Fallback to text if image fails to load
-                                e.currentTarget.style.display = "none";
-                                e.currentTarget.nextElementSibling?.classList.remove(
-                                  "hidden"
-                                );
-                              }}
                             />
                             <span className="text-xl hidden">{hook.type}</span>
                           </div>

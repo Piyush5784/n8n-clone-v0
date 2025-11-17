@@ -2,12 +2,15 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { User, Mail, Lock } from "lucide-react";
+import { User, Mail, Lock, Eye, EyeClosed, EyeOff } from "lucide-react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { BACKEND_URL } from "../../config";
-import Topbar from "@repo/ui/topbar";
+import Topbar from "@/components/navbar";
 import { SignupSchema } from "@repo/types";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/Buttons";
+import Link from "next/link";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -17,6 +20,7 @@ export default function SignUpPage() {
     password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const validateForm = () => {
@@ -97,7 +101,7 @@ export default function SignUpPage() {
                 </label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                  <input
+                  <Input
                     type="text"
                     value={formData.username}
                     onChange={(e) =>
@@ -122,7 +126,7 @@ export default function SignUpPage() {
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                  <input
+                  <Input
                     type="email"
                     value={formData.email}
                     onChange={(e) =>
@@ -146,8 +150,8 @@ export default function SignUpPage() {
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                  <input
-                    type="password"
+                  <Input
+                    type={showPassword ? "text" : "password"}
                     value={formData.password}
                     onChange={(e) =>
                       setFormData({ ...formData, password: e.target.value })
@@ -159,6 +163,13 @@ export default function SignUpPage() {
                     required
                     minLength={4}
                   />
+                  <div onClick={() => setShowPassword(!showPassword)}>
+                    {showPassword ? (
+                      <Eye className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                    ) : (
+                      <EyeOff className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                    )}
+                  </div>
                 </div>
                 {errors.password ? (
                   <p className="text-xs text-red-500">{errors.password}</p>
@@ -170,22 +181,23 @@ export default function SignUpPage() {
               </div>
             </div>
 
-            <button
+            <Button
               type="submit"
               disabled={isLoading}
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="w-full"
+              // className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {isLoading ? "Creating Account..." : "Sign Up"}
-            </button>
+            </Button>
 
             <p className="text-center text-sm text-gray-600">
               Already have an account?{" "}
-              <a
+              <Link
                 href="/signin"
                 className="font-medium text-blue-600 hover:text-blue-500"
               >
                 Sign in
-              </a>
+              </Link>
             </p>
           </form>
         </div>

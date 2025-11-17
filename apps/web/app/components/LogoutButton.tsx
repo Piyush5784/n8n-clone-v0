@@ -6,14 +6,11 @@ import { useRouter } from "next/navigation";
 const LogoutButton = () => {
   const router = useRouter();
   function logout() {
-    if (typeof window === "undefined" || typeof localStorage === "undefined") {
-      return "";
-    }
     localStorage.removeItem("token");
-    router.push("/signin");
+    return router.push("/signin");
   }
   return (
-    <Button variant="red" onClick={logout} className="w-full">
+    <Button variant="destructive" onClick={logout} className="w-full">
       Logout
     </Button>
   );

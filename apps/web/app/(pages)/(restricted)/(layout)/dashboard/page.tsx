@@ -1,12 +1,20 @@
 "use client";
-import { Button } from "@repo/ui/button";
 import React, { useState, useEffect } from "react";
-import { getWorkflows } from "../../../helpers/function";
-import Loader from "../../../components/Loader";
+import { getWorkflows } from "../../../../helpers/function";
+import Loader from "../../../../components/Loader";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import { useAuth } from "../../../hooks/useAuth";
-import { BACKEND_URL, BACKEND_URL_HOOKS } from "../../../config";
+import { useAuth } from "../../../../hooks/useAuth";
+import { BACKEND_URL, BACKEND_URL_HOOKS } from "../../../../config";
+import {
+  ClipboardCopy,
+  ClipboardCopyIcon,
+  CopyCheckIcon,
+  CopyIcon,
+  LucideClipboardCopy,
+} from "lucide-react";
+import { CopyButton } from "@/components/copy-button";
+import { Button } from "@/components/Buttons";
 
 interface Workflow {
   id: string;
@@ -24,6 +32,7 @@ interface WorkflowsResponse {
 const Page = () => {
   const [workflows, setWorkflows] = useState<Workflow[]>([]);
   const [loading, setLoading] = useState(true);
+  // const [copy, setCopy];
   const [error, setError] = useState<string | null>(null);
   const { getAuthHeader, isAuthenticated, isLoading: authLoading } = useAuth();
 
@@ -32,7 +41,6 @@ const Page = () => {
 
     if (!isAuthenticated) {
       setLoading(false);
-      // Optionally redirect to login or show a specific message
       setError("You must be logged in to view workflows.");
       return;
     }
@@ -65,7 +73,7 @@ const Page = () => {
     };
 
     fetchWorkflows();
-  }, [isAuthenticated, authLoading, getAuthHeader]);
+  }, [isAuthenticated, authLoading]);
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard
@@ -87,7 +95,6 @@ const Page = () => {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col items-center justify-center h-64 bg-red-50 rounded-xl border border-red-200 shadow-sm p-6">
-          {/* <ExclamationTriangleIcon className="h-12 w-12 text-red-500 mb-4" /> */}
           <div className="text-5xl text-red-500 mb-4">⚠️</div>
           <h3 className="font-bold text-xl text-gray-900 mb-2">{error}</h3>
           <p className="text-base text-gray-600 text-center">
@@ -190,10 +197,10 @@ const Page = () => {
                           }
                           ...{workflow.id.slice(0, 4)}
                         </a>
-                        <Button onClick={() => copyToClipboard(workflowUrl)}>
-                          {/* <ClipboardDocumentIcon className="h-5 w-5" /> */}
-                          Copy
-                        </Button>
+                        <CopyButton value={workflowUrl} />
+                        {/* <div onClick={() => copyToClipboard(workflowUrl)}>
+                          <CopyIcon className="h-5 w-5" />
+                        </div> */}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -204,7 +211,7 @@ const Page = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex gap-2">
                         <Link href={`/workflow/${workflow.id}`} passHref>
-                          <Button>View</Button>
+                          <Button variant="outline">View</Button>
                         </Link>
                         {/* Add more actions here if needed, e.g., Edit, Delete */}
                       </div>

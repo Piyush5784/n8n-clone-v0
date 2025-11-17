@@ -24,7 +24,6 @@ interface CreateWorkflowResponse {
 const CreateWorkflowForm: React.FC<CreateWorkflowFormProps> = ({
   isOpen,
   onClose,
-  onWorkflowCreated,
 }) => {
   const [formData, setFormData] = useState<WorkflowData>({
     title: "",

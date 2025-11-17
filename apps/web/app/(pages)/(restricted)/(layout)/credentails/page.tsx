@@ -11,8 +11,8 @@ import {
   Save,
   X,
 } from "lucide-react";
-import { getCredentails } from "../../../helpers/function";
-import CreateCredentialsForm from "../../../components/CreateCredentialsForm";
+import { getCredentails } from "../../../../helpers/function";
+import CreateCredentialsForm from "../../../../components/CreateCredentialsForm";
 
 const getCredentialPassword = async (id: number) => {
   // Simulated password fetch

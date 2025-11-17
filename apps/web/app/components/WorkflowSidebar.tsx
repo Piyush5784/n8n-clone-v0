@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { BACKEND_URL, TOKEN } from "../config";
 import toast from "react-hot-toast";
+import { Button } from "./Buttons";
 
 interface Execution {
   id: string;
@@ -87,9 +88,9 @@ export const WorkflowSidebar = ({ workflowId }: WorkflowSidebarProps) => {
   return (
     <>
       {/* Toggle Button - Fixed position */}
-      <button
+      <Button
         onClick={toggleSidebar}
-        className={`fixed top-1/2 z-50 bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-r-lg shadow-lg transition-all duration-300 ease-in-out transform -translate-y-1/2 ${
+        className={`fixed top-1/2 z-50 p-3 rounded-none rounded-r-lg shadow-2xl transition-all duration-300 ease-in-out transform -translate-y-1/2 ${
           isOpen ? "left-96" : "left-0"
         }`}
       >
@@ -108,7 +109,7 @@ export const WorkflowSidebar = ({ workflowId }: WorkflowSidebarProps) => {
             d="M9 5l7 7-7 7"
           />
         </svg>
-      </button>
+      </Button>
 
       {/* Sidebar */}
       <div

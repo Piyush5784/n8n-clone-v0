@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { BACKEND_URL, TOKEN } from "../config";
 import { useRouter } from "next/navigation";
+import { Button } from "./Buttons";
 
 interface CreateCredentialsFormProps {
   isOpen: boolean;
@@ -351,21 +352,23 @@ const CreateCredentialsForm = ({
           {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
 
           <div className="flex justify-end space-x-3">
-            <button
+            <Button
               type="button"
+              variant={"secondary"}
               onClick={onClose}
               className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
               disabled={isLoading}
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+              variant={"default"}
+              // className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
               disabled={isLoading}
             >
               {isLoading ? "Creating..." : "Create Credentials"}
-            </button>
+            </Button>
           </div>
         </form>
       </div>

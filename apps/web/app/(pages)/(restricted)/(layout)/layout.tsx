@@ -1,25 +1,20 @@
 "use client";
 import { Button } from "@repo/ui/button";
 import React, { ReactNode, useState } from "react";
-import CreateWorkflowForm from "../../components/CreateWorkflowForm";
-import Navbar from "../../components/navbar";
-import Sidebar from "../../components/sidebar";
+import CreateWorkflowForm from "@/components/CreateWorkflowForm";
+import Sidebar from "@/components/sidebar";
 
 const Page = ({ children }: { children: ReactNode }) => {
   const [openCreateModal, setOpenCreateModal] = useState(false);
 
   return (
     <div className="flex flex-col h-screen bg-gray-50">
-      {/* <Navbar /> */}
-
       <div className="flex flex-1 overflow-hidden">
         <div className="hidden md:block">
           <Sidebar />
         </div>
 
-        {/* Main Content */}
         <div className="flex-1 flex flex-col p-6">
-          {/* Header */}
           <div className="flex justify-between items-center mb-6">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Workflows</h1>
@@ -27,7 +22,7 @@ const Page = ({ children }: { children: ReactNode }) => {
                 Manage and create your automation workflows
               </p>
             </div>
-            <Button onClick={() => setOpenCreateModal(true)}>
+            <Button variant="dark" onClick={() => setOpenCreateModal(true)}>
               ✨ Create Workflow
             </Button>
           </div>

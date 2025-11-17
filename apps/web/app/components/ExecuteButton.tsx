@@ -1,9 +1,9 @@
 "use client";
 import React, { useState } from "react";
-import { Button } from "./Buttons";
 import axios from "axios";
 import { BACKEND_URL, BACKEND_URL_HOOKS, TOKEN } from "../config";
 import toast from "react-hot-toast";
+import { Button } from "./Buttons";
 
 const ExecuteButton = ({ workflowId }: { workflowId: string }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -33,7 +33,7 @@ const ExecuteButton = ({ workflowId }: { workflowId: string }) => {
   return (
     <div>
       <Button
-        variant="green"
+        variant="success"
         className="px-6 py-2"
         onClick={handleClick}
         disabled={isLoading}

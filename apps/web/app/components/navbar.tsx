@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import React from "react";
+import { Button } from "./Buttons";
 
 export default function Navbar() {
   const { useState } = React;
@@ -28,8 +29,8 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0">
             <Link href="/" className="cursor-pointer">
-              <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Brand
+              <span className="text-2xl font-bold bg-stone-900 bg-clip-text text-transparent">
+                FlowBoard
               </span>
             </Link>
           </div>
@@ -38,14 +39,15 @@ export default function Navbar() {
             {navItems.map((item) => {
               const IconComponent = getIcon(item.icon);
               return (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className="flex items-center space-x-2 px-4 py-2 rounded-full text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 font-medium"
-                >
-                  <IconComponent size={18} />
-                  <span>{item.name}</span>
-                </a>
+                <Button key={item.name} asChild variant={"link"}>
+                  <Link
+                    href={item.href}
+                    className="flex items-center space-x-2 px-4 text-lg py-2 rounded-full text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 font-medium"
+                  >
+                    <IconComponent size={18} />
+                    <span>{item.name}</span>
+                  </Link>
+                </Button>
               );
             })}
           </div>
@@ -74,7 +76,7 @@ export default function Navbar() {
           {navItems.map((item) => {
             const IconComponent = getIcon(item.icon);
             return (
-              <a
+              <Link
                 key={item.name}
                 href={item.href}
                 className="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 font-medium"
@@ -82,7 +84,7 @@ export default function Navbar() {
               >
                 <IconComponent size={20} />
                 <span>{item.name}</span>
-              </a>
+              </Link>
             );
           })}
         </div>
