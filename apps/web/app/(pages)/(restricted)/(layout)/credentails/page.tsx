@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { getCredentails } from "../../../../helpers/function";
 import CreateCredentialsForm from "../../../../components/CreateCredentialsForm";
+import { Button } from "@/components/Buttons";
 
 const getCredentialPassword = async (id: number) => {
   // Simulated password fetch
@@ -123,7 +124,7 @@ const Credentials = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-500 mx-auto"></div>
           <p className="text-gray-600 mt-4">Loading credentials...</p>
         </div>
       </div>
@@ -133,10 +134,9 @@ const Credentials = () => {
   return (
     <div className="min-h-screen ">
       <div className="max-w-4xl pt-4">
-        {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <Shield className="h-8 w-8 text-blue-500" />
+            <Shield className="h-8 w-8 text-gray-500" />
             <h1 className="text-3xl font-bold text-gray-900">
               Credentials Manager
             </h1>
@@ -146,42 +146,37 @@ const Credentials = () => {
           </p>
         </div>
 
-        {/* Add New Button */}
         <div className="mb-6">
-          <button
-            onClick={() => setOpenPopup(true)}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
-          >
+          <Button onClick={() => setOpenPopup(true)}>
             <Plus className="h-4 w-4" />
             Add New Credential
-          </button>
+          </Button>
         </div>
         <CreateCredentialsForm
           isOpen={openPopup}
           onClose={() => setOpenPopup(false)}
         />
-        {/* Credentials Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {credentials.map((credential) => (
             <div
               key={credential.id}
               onClick={() => handleCredentialClick(credential)}
-              className="bg-white border border-gray-200 rounded-xl p-6 cursor-pointer hover:border-blue-500 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 group"
+              className="bg-white border border-gray-200 rounded-xl p-6 cursor-pointer hover:border-gray-500 hover:shadow-xl hover:shadow-gray-500/10 transition-all duration-300 group"
             >
               <div className="flex items-start justify-between mb-4">
-                <div className="p-3 bg-blue-100 rounded-lg group-hover:bg-blue-200 transition-colors">
-                  <Key className="h-6 w-6 text-blue-600" />
+                <div className="p-3 bg-gray-100 rounded-lg group-hover:bg-gray-200 transition-colors">
+                  <Key className="h-6 w-6 text-gray-900" />
                 </div>
-                <Settings className="h-5 w-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
+                <Settings className="h-5 w-5 text-gray-400 group-hover:text-gray-600 transition-colors" />
               </div>
 
               <h3 className="text-xl font-semibold text-gray-900 mb-2">
                 {credential.title}
               </h3>
-              <p className="text-blue-600 text-sm mb-3">{credential.type}</p>
-              <div className="text-xs text-gray-500">
-                Last updated: {credential.lastUpdated}
-              </div>
+              <p className="text-gray-600 text-sm mb-3">{credential.type}</p>
+              {/* <div className="text-xs text-gray-500">
+                Last updated: {credential}
+              </div> */}
             </div>
           ))}
         </div>
@@ -201,12 +196,12 @@ const Credentials = () => {
 
             {/* Modal Header */}
             <div className="flex items-center gap-3 mb-6">
-              <Key className="h-6 w-6 text-blue-500" />
+              <Key className="h-6 w-6 text-gray-500" />
               <div>
                 <h2 className="text-xl font-semibold text-gray-900">
                   {isEditing ? "Edit Credential" : selectedCredential.name}
                 </h2>
-                <p className="text-blue-600 text-sm">
+                <p className="text-gray-600 text-sm">
                   {selectedCredential.type}
                 </p>
               </div>
@@ -230,7 +225,7 @@ const Credentials = () => {
                           type: e.target.value,
                         }))
                       }
-                      className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-gray-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                      className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-gray-900 focus:outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500"
                       placeholder="Enter credential type"
                     />
                   </div>
@@ -248,7 +243,7 @@ const Credentials = () => {
                           name: e.target.value,
                         }))
                       }
-                      className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-gray-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                      className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-gray-900 focus:outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500"
                       placeholder="Enter credential name"
                     />
                   </div>
@@ -266,7 +261,7 @@ const Credentials = () => {
                           password: e.target.value,
                         }))
                       }
-                      className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-gray-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                      className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-gray-900 focus:outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500"
                       placeholder="Leave blank to keep current password"
                     />
                   </div>
@@ -275,7 +270,7 @@ const Credentials = () => {
                     <button
                       onClick={handleUpdate}
                       disabled={loading}
-                      className="flex-1 flex cursor-pointer items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg transition-colors"
+                      className="flex-1 flex cursor-pointer items-center justify-center gap-2 bg-gray-600 hover:bg-gray-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg transition-colors"
                     >
                       <Save className="h-4 w-4" />
                       {loading ? "Saving..." : "Save Changes"}
@@ -314,10 +309,10 @@ const Credentials = () => {
                       <button
                         onClick={handleShowPassword}
                         disabled={loadingPassword}
-                        className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-blue-600 transition-colors"
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                       >
                         {loadingPassword ? (
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-500"></div>
                         ) : showPassword ? (
                           <EyeOff className="h-4 w-4" />
                         ) : (
@@ -330,7 +325,7 @@ const Credentials = () => {
                   <div className="flex gap-3 pt-4">
                     <button
                       onClick={() => setIsEditing(true)}
-                      className="flex-1 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+                      className="flex-1 flex items-center justify-center gap-2 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors"
                     >
                       <Edit3 className="h-4 w-4" />
                       Edit Credential
