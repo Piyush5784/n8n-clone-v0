@@ -3,7 +3,7 @@ import "dotenv/config";
 import nodemailer from "nodemailer";
 import { simpleParser } from "mailparser";
 import { randomUUID } from "crypto";
-import { ExecutionResult, getCredentials } from "./helper";
+import { ExecutionResult, getCredentials, getCredentialsById } from "./helper";
 import { JsonObject } from "@prisma/client/runtime/library";
 
 let emailId: string;
@@ -145,12 +145,22 @@ async function checkReplies(
 
 export async function sendAndAwait(
   userId: string,
-  targetEmail: string
+  targetEmail: string,
+  options?: {
+    useEmailConnection?: boolean;
+    subject?: string;
+    body?: string;
+    timeout?: number;
+  }
 ): Promise<ExecutionResult> {
   try {
-    const emailCredentials = await getCredentials(userId, "resend");
+    const emailCredentials = await getCredentials(userId, "email_connection");
     if (!emailCredentials) {
-      return { success: false, failedReason: "No email credentials found" };
+      return {
+        success: false,
+        failedReason:
+          "No email connection found. Please connect your email first.",
+      };
     }
 
     const data = emailCredentials.data as JsonObject;
@@ -179,14 +189,22 @@ export async function sendAndAwait(
 
     emailId = randomUUID().slice(0, 8);
 
-    const options = {
+    // Use custom subject and body if provided, otherwise use defaults
+    const customSubject =
+      options?.subject || `Confirm payment - ID: ${emailId}`;
+    const customBody =
+      options?.body ||
+      `Reply YES or NO to confirm this payment.\n\nEmail ID: ${emailId}`;
+    const timeoutMs = (options?.timeout || 120) * 1000; // Convert to milliseconds
+
+    const emailOptions = {
       from: fromEmail,
       to: targetEmail,
-      subject: `Confirm payment - ID: ${emailId}`,
-      text: `Reply YES or NO to confirm this payment.\n\nEmail ID: ${emailId}`,
+      subject: customSubject,
+      text: customBody,
     };
 
-    await transporter.sendMail(options);
+    await transporter.sendMail(emailOptions);
     console.log(`Email sent with ID: ${emailId}`);
 
     const imap = new Imap({
@@ -234,7 +252,7 @@ export async function sendAndAwait(
           },
           "Timeout reached"
         );
-      }, 120000);
+      }, timeoutMs);
 
       imap.once("ready", () => {
         console.log("Monitoring for replies");

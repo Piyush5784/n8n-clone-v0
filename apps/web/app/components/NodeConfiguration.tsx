@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { BACKEND_URL, TOKEN } from "../config";
 import { CustomNode } from "@repo/types";
+import { getCredentails } from "../helpers/function";
 
 interface NodeConfigurationModalProps {
   isOpen: boolean;
@@ -20,15 +21,41 @@ export const NodeConfigurationModal: React.FC<NodeConfigurationModalProps> = ({
   workflowId,
   onSave,
 }) => {
+  const [configuration, setConfiguration] = useState<any>({});
+  const [loading, setLoading] = useState(false);
+  const [emailCredentials, setEmailCredentials] = useState<any[]>([]);
+  const [loadingCredentials, setLoadingCredentials] = useState(false);
+
   if (node?.data.label == "trigger" || node?.data.label == "webhook") {
     return null;
   }
-  const [configuration, setConfiguration] = useState<any>({});
-  const [loading, setLoading] = useState(false);
 
+  // Fetch email credentials when component mounts or when node changes
   useEffect(() => {
+    const fetchCredentials = async () => {
+      if (
+        node?.data.label === "sendEmail" ||
+        node?.data.label === "sendAndAwait"
+      ) {
+        setLoadingCredentials(true);
+        try {
+          const res = (await getCredentails()) as any;
+          const emailCreds = res.credentials.filter(
+            (cred: any) => cred.type === "resend"
+          );
+          setEmailCredentials(emailCreds);
+        } catch (error) {
+          console.error("Failed to fetch email credentials:", error);
+          toast.error("Failed to load email credentials");
+        } finally {
+          setLoadingCredentials(false);
+        }
+      }
+    };
+
     if (node) {
       setConfiguration((node.data as any).metadata || {});
+      fetchCredentials();
     }
   }, [node]);
 
@@ -172,6 +199,43 @@ export const NodeConfigurationModal: React.FC<NodeConfigurationModalProps> = ({
       case "sendEmail":
         return (
           <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Email Connection
+              </label>
+              {loadingCredentials ? (
+                <div className="flex items-center space-x-2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
+                  <span className="text-sm text-gray-500">
+                    Loading credentials...
+                  </span>
+                </div>
+              ) : (
+                <select
+                  value={configuration.emailCredentialId || ""}
+                  onChange={(e) =>
+                    setConfiguration({
+                      ...configuration,
+                      emailCredentialId: e.target.value,
+                    })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select email credentials</option>
+                  {emailCredentials.map((cred) => (
+                    <option key={cred.id} value={cred.id}>
+                      {cred.title || `Email Credential ${cred.id}`}
+                    </option>
+                  ))}
+                </select>
+              )}
+              {emailCredentials.length === 0 && !loadingCredentials && (
+                <p className="text-sm text-orange-600 mt-1">
+                  No email credentials found. Please create email credentials
+                  first.
+                </p>
+              )}
+            </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 To Email
@@ -384,7 +448,44 @@ export const NodeConfigurationModal: React.FC<NodeConfigurationModalProps> = ({
 
       case "sendAndAwait":
         return (
-          <>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Email Connection
+              </label>
+              {loadingCredentials ? (
+                <div className="flex items-center space-x-2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
+                  <span className="text-sm text-gray-500">
+                    Loading credentials...
+                  </span>
+                </div>
+              ) : (
+                <select
+                  value={configuration.emailCredentialId || ""}
+                  onChange={(e) =>
+                    setConfiguration({
+                      ...configuration,
+                      emailCredentialId: e.target.value,
+                    })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select email credentials</option>
+                  {emailCredentials.map((cred) => (
+                    <option key={cred.id} value={cred.id}>
+                      {cred.title || `Email Credential ${cred.id}`}
+                    </option>
+                  ))}
+                </select>
+              )}
+              {emailCredentials.length === 0 && !loadingCredentials && (
+                <p className="text-sm text-orange-600 mt-1">
+                  No email credentials found. Please create email credentials
+                  first.
+                </p>
+              )}
+            </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 To Email
@@ -399,7 +500,60 @@ export const NodeConfigurationModal: React.FC<NodeConfigurationModalProps> = ({
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-          </>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Subject
+              </label>
+              <input
+                type="text"
+                value={configuration.subject || ""}
+                onChange={(e) =>
+                  setConfiguration({
+                    ...configuration,
+                    subject: e.target.value,
+                  })
+                }
+                placeholder="Email subject (optional - defaults to payment confirmation)"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Message Body
+              </label>
+              <textarea
+                value={configuration.body || ""}
+                onChange={(e) =>
+                  setConfiguration({ ...configuration, body: e.target.value })
+                }
+                placeholder="Email message content (optional - defaults to payment confirmation request)"
+                rows={3}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Timeout (seconds)
+              </label>
+              <input
+                type="number"
+                value={configuration.timeout || "120"}
+                onChange={(e) =>
+                  setConfiguration({
+                    ...configuration,
+                    timeout: parseInt(e.target.value) || 120,
+                  })
+                }
+                placeholder="120"
+                min="10"
+                max="600"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                How long to wait for a reply (10-600 seconds)
+              </p>
+            </div>
+          </div>
         );
       default:
         return (

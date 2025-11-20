@@ -24,10 +24,17 @@ export async function sendEmail(
   userId: string,
   to: string,
   subject: string,
-  body: string
+  body: string,
+  useEmailConnection: boolean = true
 ): Promise<ExecutionResult> {
   try {
-    const emailCredentials = await getCredentials(userId, "resend");
+    let emailCredentials: JsonObject | null;
+
+    if (useEmailConnection) {
+      emailCredentials = await getCredentials(userId, "email_connection");
+    } else {
+      emailCredentials = await getCredentials(userId, "resend");
+    }
 
     if (!emailCredentials) {
       console.error("No email credentials found for user:", userId);
@@ -137,6 +144,28 @@ export async function getCredentials(
   } catch (error) {
     console.error(
       `Error fetching credentials for user ${userId}, type ${credentialType}:`,
+      error
+    );
+    return null;
+  }
+}
+
+export async function getCredentialsById(
+  userId: string,
+  credentialId: string
+): Promise<JsonObject | null> {
+  try {
+    const credential = await prisma.credentials.findFirst({
+      where: {
+        id: credentialId,
+        userId: userId, // Ensure user owns the credential
+      },
+      select: { data: true },
+    });
+    return (credential?.data as JsonObject) || null;
+  } catch (error) {
+    console.error(
+      `Error fetching credential ${credentialId} for user ${userId}:`,
       error
     );
     return null;
