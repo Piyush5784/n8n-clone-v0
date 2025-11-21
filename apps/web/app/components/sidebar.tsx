@@ -1,7 +1,6 @@
-import { Button } from "./Buttons";
 import Link from "next/link";
 import LogoutButton from "./LogoutButton";
-import { Activity, KeyRound, Monitor, Workflow } from "lucide-react";
+import { KeyRound, Workflow } from "lucide-react";
 
 const Sidebar = () => {
   const menuItems = [

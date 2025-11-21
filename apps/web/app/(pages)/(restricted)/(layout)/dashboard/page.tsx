@@ -3,18 +3,12 @@ import React, { useState, useEffect } from "react";
 import { getWorkflows } from "../../../../helpers/function";
 import Loader from "../../../../components/Loader";
 import Link from "next/link";
-import toast from "react-hot-toast";
 import { useAuth } from "../../../../hooks/useAuth";
 import { BACKEND_URL, BACKEND_URL_HOOKS } from "../../../../config";
-import {
-  ClipboardCopy,
-  ClipboardCopyIcon,
-  CopyCheckIcon,
-  CopyIcon,
-  LucideClipboardCopy,
-} from "lucide-react";
+
 import { CopyButton } from "@/components/copy-button";
 import { Button } from "@/components/Buttons";
+import { toast } from "sonner";
 
 interface Workflow {
   id: string;
@@ -75,18 +69,6 @@ const Page = () => {
     fetchWorkflows();
   }, [isAuthenticated, authLoading]);
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard
-      .writeText(text)
-      .then(() => {
-        toast.success("Copied to clipboard!");
-      })
-      .catch((err) => {
-        console.error("Failed to copy:", err);
-        toast.error("Failed to copy URL.");
-      });
-  };
-
   if (authLoading || loading) {
     return <Loader />;
   }
@@ -130,10 +112,8 @@ const Page = () => {
   }
 
   return (
-    <div className="container mx-auto px-1 py-8">
-      {/* <h1 className="text-3xl font-bold text-gray-900 mb-6">Your Workflows</h1> */}
-
-      <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+    <div className="container mx-auto px-1 py-8 pt-0 pl-0 ">
+      <div className="bg-white rounded-xl shadow-lg border border-gray-300 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
@@ -183,24 +163,17 @@ const Page = () => {
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-600">
                       <div className="flex items-center gap-2">
-                        <a
+                        <Link
                           href={workflowUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-blue-600 hover:text-blue-800 truncate max-w-[150px] block"
+                          className="text-blue-600 hover:text-blue-800 px-2 py-2 border rounded-lg truncate max-w-[150px] block"
                           title={workflowUrl}
                         >
-                          {
-                            workflowUrl
-                              .replace(/^https?:\/\//, "")
-                              .split("/")[0]
-                          }
+                          {workflowUrl.replace(/^https?:\/\//, "")}
                           ...{workflow.id.slice(0, 4)}
-                        </a>
+                        </Link>
                         <CopyButton value={workflowUrl} />
-                        {/* <div onClick={() => copyToClipboard(workflowUrl)}>
-                          <CopyIcon className="h-5 w-5" />
-                        </div> */}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -213,7 +186,10 @@ const Page = () => {
                         <Link href={`/workflow/${workflow.id}`} passHref>
                           <Button variant="outline">View</Button>
                         </Link>
-                        {/* Add more actions here if needed, e.g., Edit, Delete */}
+                        <Link href={`/workflow/${workflow.id}`} passHref>
+                          <Button variant="outline">Edit</Button>
+                        </Link>
+                        <Button variant="outline">Delete</Button>
                       </div>
                     </td>
                   </tr>

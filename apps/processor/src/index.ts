@@ -47,6 +47,14 @@ async function main() {
 
       console.log(`Processed ${pendingRows.length} pending executions`);
     }
+
+    const res = await new Promise((res, rej) => {
+      setTimeout(() => {
+        res("Awaiting 5 sec before continue");
+      }, 5000);
+    });
+
+    console.log(res);
   }
 }
 

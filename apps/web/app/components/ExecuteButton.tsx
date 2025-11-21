@@ -2,8 +2,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { BACKEND_URL, BACKEND_URL_HOOKS, TOKEN } from "../config";
-import toast from "react-hot-toast";
 import { Button } from "./Buttons";
+import { toast } from "sonner";
 
 const ExecuteButton = ({ workflowId }: { workflowId: string }) => {
   const [isLoading, setIsLoading] = useState(false);
