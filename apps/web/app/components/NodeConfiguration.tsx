@@ -1,9 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import axios from "axios";
 import { BACKEND_URL, TOKEN } from "../config";
 import { CustomNode } from "@repo/types";
+import { toast } from "sonner";
+import { Button } from "./Buttons";
 import { getCredentails } from "../helpers/function";
 
 interface NodeConfigurationModalProps {
@@ -606,22 +607,17 @@ export const NodeConfigurationModal: React.FC<NodeConfigurationModalProps> = ({
           </div>
 
           <div className="flex justify-end space-x-3">
-            <button
+            <Button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              variant={"outline"}
               disabled={loading}
             >
               Cancel
-            </button>
-            <button
-              type="button"
-              onClick={handleSave}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={loading}
-            >
+            </Button>
+            <Button type="button" onClick={handleSave} disabled={loading}>
               {loading ? "Saving..." : "Save Configuration"}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

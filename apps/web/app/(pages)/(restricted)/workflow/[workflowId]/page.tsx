@@ -19,7 +19,6 @@ import {
 import "@xyflow/react/dist/style.css";
 import { Button } from "@/components/Buttons";
 import { getWebhooks, webhookType } from "@/helpers/function";
-import toast from "react-hot-toast";
 import { BACKEND_URL, TOKEN } from "@/config";
 import Credentials from "@/components/Credentials";
 import { useParams } from "next/navigation";
@@ -30,6 +29,8 @@ import ExecuteButton from "@/components/ExecuteButton";
 import Link from "next/link";
 import { WorkflowSidebar } from "@/components/WorkflowSidebar";
 import { AvailableWebhook, CustomNode, hookType } from "@repo/types";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { toast } from "sonner";
 
 const initialNodes: CustomNode[] = [];
 const initialEdges: Edge[] = [];
@@ -244,6 +245,12 @@ function Flow() {
       <WorkflowSidebar workflowId={workflowId} />
       <div className="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
         <div className="text-2xl font-semibold text-gray-800">
+          <Button className="mx-3" asChild variant={"outline"}>
+            <Link href={"/dashboard"}>
+              {" "}
+              <ArrowLeft />
+            </Link>
+          </Button>
           Workflow Builder
           <span className="text-sm text-gray-500 ml-2">ID: {workflowId}</span>
         </div>

@@ -2,7 +2,12 @@ import axios from "axios";
 import React, { useState } from "react";
 import { BACKEND_URL, TOKEN } from "../config";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
+import { Button } from "./Buttons";
+import { Textarea } from "./ui/textarea";
+import { Label } from "./ui/label";
+import { Input } from "./ui/input";
+import { X } from "lucide-react";
+import { toast } from "sonner";
 
 interface CreateWorkflowFormProps {
   isOpen: boolean;
@@ -21,10 +26,7 @@ interface CreateWorkflowResponse {
   message?: string;
 }
 
-const CreateWorkflowForm: React.FC<CreateWorkflowFormProps> = ({
-  isOpen,
-  onClose,
-}) => {
+const CreateWorkflowForm = ({ isOpen, onClose }: CreateWorkflowFormProps) => {
   const [formData, setFormData] = useState<WorkflowData>({
     title: "",
     description: "",
@@ -74,23 +76,24 @@ const CreateWorkflowForm: React.FC<CreateWorkflowFormProps> = ({
     <div className="bg-white rounded-lg p-6 w-full">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-semibold">Create New Workflow</h2>
-        <button
+        <Button
+          variant={"outline"}
           onClick={onClose}
-          className="text-gray-500 hover:text-gray-700 text-xl font-bold"
+          // className="text-gray-500 hover:text-gray-700 text-xl font-bold"
         >
-          ×
-        </button>
+          <X />
+        </Button>
       </div>
 
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label
+          <Label
             htmlFor="title"
             className="block text-sm font-medium mb-2 text-gray-700"
           >
             Workflow Title
-          </label>
-          <input
+          </Label>
+          <Input
             type="text"
             id="title"
             value={formData.title}
@@ -104,13 +107,13 @@ const CreateWorkflowForm: React.FC<CreateWorkflowFormProps> = ({
         </div>
 
         <div className="mb-4">
-          <label
+          <Label
             htmlFor="description"
             className="block text-sm font-medium mb-2 text-gray-700"
           >
             Description
-          </label>
-          <textarea
+          </Label>
+          <Textarea
             id="description"
             value={formData.description}
             onChange={(e) =>
@@ -118,7 +121,7 @@ const CreateWorkflowForm: React.FC<CreateWorkflowFormProps> = ({
             }
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="Enter workflow description..."
-            rows={3}
+            rows={10}
           />
         </div>
 
@@ -129,21 +132,17 @@ const CreateWorkflowForm: React.FC<CreateWorkflowFormProps> = ({
         )}
 
         <div className="flex justify-end space-x-3">
-          <button
+          <Button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
+            variant={"outline"}
             disabled={isLoading}
           >
             Cancel
-          </button>
-          <button
-            type="submit"
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={isLoading}
-          >
+          </Button>
+          <Button type="submit" variant={"default"} disabled={isLoading}>
             {isLoading ? "Creating..." : "Create Workflow"}
-          </button>
+          </Button>
         </div>
       </form>
     </div>

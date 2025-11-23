@@ -4,8 +4,8 @@ import React, { useState, useEffect } from "react";
 import { getExecutions } from "../../../../helpers/function";
 import Loader from "../../../../components/Loader";
 import Link from "next/link";
-import toast from "react-hot-toast";
 import { useAuth } from "../../../../hooks/useAuth";
+import { toast } from "sonner";
 
 interface Execution {
   id: string;

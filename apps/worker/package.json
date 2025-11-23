@@ -23,6 +23,7 @@
     "@langchain/langgraph": "^0.4.9",
     "ai": "^5.0.48",
     "axios": "^1.12.2",
+    "googleapis": "^166.0.0",
     "imap": "^0.8.19",
     "kafkajs": "^2.2.4",
     "langchain": "^0.3.34",

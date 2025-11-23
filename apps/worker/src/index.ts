@@ -21,13 +21,8 @@ const kafka = new Kafka({
 async function main() {
   const consumer = kafka.consumer({
     groupId: "main-worker",
-    sessionTimeout: 60000, // Must be between 6000 and 300000 ms
-    heartbeatInterval: 3000, // Must be between 300 and 30000 ms
-    maxWaitTimeInMs: 5000, // Must be between 1 and 300000 ms
-    retry: {
-      initialRetryTime: 300, // Must be >= 0
-      retries: 8,
-    },
+    sessionTimeout: 30 * 1000, // Must be between 6000 and 300000 ms
+    heartbeatInterval: 3 * 1000, // Must be between 300 and 30000 ms
   });
   await consumer.connect();
   const producer = kafka.producer();

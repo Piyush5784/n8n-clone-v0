@@ -4,13 +4,13 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { SigninSchema } from "@repo/types";
 import { User, Lock, Mail, Eye, EyeOff } from "lucide-react";
-import toast from "react-hot-toast";
 import axios from "axios";
 import { BACKEND_URL } from "../../config";
 import Topbar from "@/components/navbar";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Button } from "@/components/Buttons";
+import { toast } from "sonner";
 export default function SignInPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({

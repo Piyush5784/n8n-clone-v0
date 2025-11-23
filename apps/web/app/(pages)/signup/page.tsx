@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { User, Mail, Lock, Eye, EyeClosed, EyeOff } from "lucide-react";
-import toast from "react-hot-toast";
 import axios from "axios";
 import { BACKEND_URL } from "../../config";
 import Topbar from "@/components/navbar";
@@ -11,6 +10,7 @@ import { SignupSchema } from "@repo/types";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/Buttons";
 import Link from "next/link";
+import { toast } from "sonner";
 
 export default function SignUpPage() {
   const router = useRouter();
