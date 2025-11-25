@@ -16,4 +16,16 @@
 
 # Setup Guidelines will be updated soon...
 
-Tech Stack :-  Nextjs, Node.js, Kafka, Docker
+Tech Stack
+
+- Frontend: Next.js 15, Typescript, Tailwind, Shadcn UI
+- Backend: Node.js, Typescript, Express JS
+- Message Queue: Apache Kafka
+- Database: PostgreSQL (with Prisma ORM)
+- Containerization: Docker
+- Monorepo Tool: Turborepo
+
+
+Transactional outbox pattern
+- 4 backends -> Backend (primary) -> hooks (for managing all executions) -> Processor (listen to db outbox) -> Worker (execution of services)
+- 1 Frontend 
