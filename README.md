@@ -7,6 +7,12 @@
 
 
 
+<img width="1850" height="935" alt="Screenshot from 2025-11-25 09-14-35" src="https://github.com/user-attachments/assets/26f15e2c-52ae-405b-8b7f-da51628bb148" />
+
+<img width="1850" height="935" alt="Screenshot from 2025-11-25 09-14-52" src="https://github.com/user-attachments/assets/3c4b8326-225b-4788-a457-a386549e5851" />
+
+<img width="1850" height="935" alt="Screenshot from 2025-11-25 09-27-17" src="https://github.com/user-attachments/assets/6b87fe23-3740-4e18-b068-9ea8cb78efb4" />
+
 
 # Setup Guidelines will be updated soon...
 
