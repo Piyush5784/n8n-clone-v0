@@ -39,6 +39,7 @@ export const AvailableWebhooks = ({
                   >
                     <div className="flex items-center">
                       <div className="shrink-0 mr-3">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={hook.image}
                           alt={hook.type}

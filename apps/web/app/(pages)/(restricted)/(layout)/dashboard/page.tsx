@@ -40,13 +40,7 @@ const Page = () => {
 
     const fetchWorkflows = async () => {
       try {
-        const authHeader = getAuthHeader();
-        if (!authHeader) {
-          setError("Authentication required. Please log in again.");
-          setLoading(false);
-          return;
-        }
-
+        if (!token) return;
         const data = (await getWorkflows(token)) as WorkflowsResponse;
 
         if (!data.success || data.error) {
