@@ -19,7 +19,7 @@ import {
 import "@xyflow/react/dist/style.css";
 import { Button } from "@/components/Buttons";
 import { getWebhooks, webhookType } from "@/helpers/function";
-import { BACKEND_URL, TOKEN } from "@/config";
+import { BACKEND_URL } from "@/config";
 import Credentials from "@/components/Credentials";
 import { useParams } from "next/navigation";
 import { NodeConfigurationModal } from "@/components/NodeConfiguration";
@@ -29,8 +29,9 @@ import ExecuteButton from "@/components/ExecuteButton";
 import Link from "next/link";
 import { WorkflowSidebar } from "@/components/WorkflowSidebar";
 import { AvailableWebhook, CustomNode, hookType } from "@repo/types";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/useAuth";
 
 const initialNodes: CustomNode[] = [];
 const initialEdges: Edge[] = [];
@@ -46,15 +47,19 @@ const defaultEdgeOptions: DefaultEdgeOptions = {
 function Flow() {
   const { workflowId } = useParams<{ workflowId: string }>();
 
+  const { token } = useAuth();
+
   const [nodes, setNodes] = useState<Node[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
   const [selectedNodeId, setSelectedNodeId] = useState<string>("");
   const [selectedNodeType, setSelectedNodeType] = useState<
     "trigger" | "webhook" | "sendEmail" | "sendTelegram" | "AiAgent"
   >("webhook");
+
   const [avaliableWebhook, setAvliableWebhooks] = useState<AvailableWebhook[]>(
     []
   );
+
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
   const [selectedNodeForConfig, setSelectedNodeForConfig] =
     useState<CustomNode | null>(null);
@@ -76,14 +81,14 @@ function Flow() {
   );
 
   useEffect(() => {
-    if (workflowId) {
+    if (workflowId && token) {
       async function fetchWorkflow() {
         try {
           const response = await axios.get(
             `${BACKEND_URL}/workflow/${workflowId}`,
             {
               headers: {
-                Authorization: `Bearer ${TOKEN}`,
+                Authorization: `Bearer ${token}`,
               },
             }
           );
@@ -95,16 +100,13 @@ function Flow() {
           if (data.success && data.workflow) {
             const workflowData = data.workflow;
 
-            // Set nodes in customNode format
             if (workflowData.nodes && Array.isArray(workflowData.nodes)) {
               setNodes(workflowData.nodes);
             }
 
-            // Set edges
             if (workflowData.edges && Array.isArray(workflowData.edges)) {
               setEdges(workflowData.edges);
             } else if (workflowData.edges) {
-              // If edges is stored as JSON, parse it
               try {
                 const parsedEdges =
                   typeof workflowData.edges === "string"
@@ -126,12 +128,13 @@ function Flow() {
       }
       fetchWorkflow();
     }
-  }, [workflowId]);
+  }, [workflowId, token]);
 
   useEffect(() => {
     async function fetchWebhooks() {
       try {
-        const data = await getWebhooks();
+        if (!token) return;
+        const data = await getWebhooks(token);
         const webhooks =
           (data as { webhooks?: AvailableWebhook[] }).webhooks || [];
 
@@ -142,7 +145,7 @@ function Flow() {
       }
     }
     fetchWebhooks();
-  }, []);
+  }, [token]);
 
   const onNodesChange: OnNodesChange = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
@@ -208,7 +211,7 @@ function Flow() {
         },
         {
           headers: {
-            Authorization: `Bearer ${TOKEN}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -223,6 +226,10 @@ function Flow() {
       console.error("Error saving workflow:", error);
       toast.error("Error saving workflow. Please try again.");
     }
+  }
+
+  if (!token) {
+    return <div>loading</div>;
   }
 
   if (!workflowId) {
@@ -373,7 +380,7 @@ function Flow() {
                         }}
                       >
                         <div className="flex items-center">
-                          <div className="flex-shrink-0 mr-3">
+                          <div className="shrink-0 mr-3">
                             <img
                               src={hook.image}
                               alt={hook.type}

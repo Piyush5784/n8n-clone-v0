@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { BACKEND_URL, TOKEN } from "../config";
+import { BACKEND_URL } from "../config";
 import { useRouter } from "next/navigation";
 import { Button } from "./Buttons";
 import { Textarea } from "./ui/textarea";
@@ -8,6 +8,7 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { X } from "lucide-react";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/useAuth";
 
 interface CreateWorkflowFormProps {
   isOpen: boolean;
@@ -27,6 +28,7 @@ interface CreateWorkflowResponse {
 }
 
 const CreateWorkflowForm = ({ isOpen, onClose }: CreateWorkflowFormProps) => {
+  const { token } = useAuth();
   const [formData, setFormData] = useState<WorkflowData>({
     title: "",
     description: "",
@@ -47,7 +49,7 @@ const CreateWorkflowForm = ({ isOpen, onClose }: CreateWorkflowFormProps) => {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${TOKEN}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );

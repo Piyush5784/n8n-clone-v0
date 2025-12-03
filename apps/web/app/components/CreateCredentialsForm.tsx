@@ -1,8 +1,9 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { BACKEND_URL, TOKEN } from "../config";
+import { BACKEND_URL } from "../config";
 import { useRouter } from "next/navigation";
 import { Button } from "./Buttons";
+import { useAuth } from "@/hooks/useAuth";
 
 interface CreateCredentialsFormProps {
   isOpen: boolean;
@@ -35,6 +36,8 @@ const CreateCredentialsForm = ({
   const [credentialType, setCredentialType] = useState<"resend" | "telegram">(
     "resend"
   );
+
+  const { token } = useAuth();
 
   const [emailData, setEmailData] = useState<EmailCredentials>({
     title: "Email Credentials",
@@ -85,6 +88,8 @@ const CreateCredentialsForm = ({
     setIsLoading(true);
     setError(null);
 
+    if (!token) return;
+
     try {
       const formData =
         credentialType === "resend"
@@ -114,7 +119,7 @@ const CreateCredentialsForm = ({
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${TOKEN}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );

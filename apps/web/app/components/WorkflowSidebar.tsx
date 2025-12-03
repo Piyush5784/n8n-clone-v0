@@ -1,16 +1,12 @@
 "use client";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { BACKEND_URL, TOKEN } from "../config";
+import { BACKEND_URL } from "../config";
 import { Button } from "./Buttons";
 import { toast } from "sonner";
-import {
-  AlignRight,
-  ArrowRight,
-  BookOpenCheck,
-  MoveRightIcon,
-  X,
-} from "lucide-react";
+
+import { useAuth } from "@/hooks/useAuth";
+import { X } from "lucide-react";
 
 interface Execution {
   id: string;
@@ -27,6 +23,7 @@ interface WorkflowSidebarProps {
 }
 
 export const WorkflowSidebar = ({ workflowId }: WorkflowSidebarProps) => {
+  const { token } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [executions, setExecutions] = useState<Execution[]>([]);
   const [loading, setLoading] = useState(false);
@@ -37,10 +34,10 @@ export const WorkflowSidebar = ({ workflowId }: WorkflowSidebarProps) => {
 
   // Fetch executions when sidebar opens or workflowId changes
   useEffect(() => {
-    if (isOpen && workflowId) {
+    if (isOpen && workflowId && token) {
       fetchExecutions();
     }
-  }, [isOpen, workflowId]);
+  }, [isOpen, workflowId, token]);
 
   const fetchExecutions = async () => {
     setLoading(true);
@@ -49,7 +46,7 @@ export const WorkflowSidebar = ({ workflowId }: WorkflowSidebarProps) => {
         `${BACKEND_URL}/executions/${workflowId}`,
         {
           headers: {
-            Authorization: `Bearer ${TOKEN}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );

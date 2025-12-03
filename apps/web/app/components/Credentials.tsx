@@ -2,20 +2,26 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Button } from "./Buttons";
 import CreateCredentialsForm from "./CreateCredentialsForm";
-import { BACKEND_URL, TOKEN } from "../config";
+import { BACKEND_URL } from "../config";
 import { getCredentails } from "../helpers/function";
+import { useAuth } from "@/hooks/useAuth";
 
 const Credentials = () => {
   const [openPopup, setOpenPopup] = useState(false);
   const [credentials, setCredentials] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const { token } = useAuth();
+
   useEffect(() => {
-    getCredentails()
+    if (!token) {
+      return;
+    }
+    getCredentails(token)
       .then((res) => setCredentials((res as any).credentials))
       .catch(() => setCredentials([]));
     setLoading(false);
-  }, []);
+  }, [token]);
 
   return (
     <div>

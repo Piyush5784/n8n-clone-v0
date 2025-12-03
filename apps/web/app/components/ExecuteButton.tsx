@@ -1,12 +1,14 @@
 "use client";
 import React, { useState } from "react";
 import axios from "axios";
-import { BACKEND_URL, BACKEND_URL_HOOKS, TOKEN } from "../config";
+import { BACKEND_URL, BACKEND_URL_HOOKS } from "../config";
 import { Button } from "./Buttons";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/useAuth";
 
 const ExecuteButton = ({ workflowId }: { workflowId: string }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const { token } = useAuth();
 
   const handleClick = async () => {
     setIsLoading(true);
@@ -15,7 +17,7 @@ const ExecuteButton = ({ workflowId }: { workflowId: string }) => {
         `${BACKEND_URL_HOOKS}/workflow/execute/${workflowId}`,
         {
           headers: {
-            Authorization: `Bearer ${TOKEN}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );

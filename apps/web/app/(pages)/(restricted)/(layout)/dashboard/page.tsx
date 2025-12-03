@@ -28,9 +28,9 @@ const Page = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { getAuthHeader, isAuthenticated, isLoading: authLoading } = useAuth();
-
+  const { token } = useAuth();
   useEffect(() => {
-    if (authLoading) return;
+    if (authLoading || !token) return;
 
     if (!isAuthenticated) {
       setLoading(false);
@@ -47,7 +47,7 @@ const Page = () => {
           return;
         }
 
-        const data = (await getWorkflows()) as WorkflowsResponse;
+        const data = (await getWorkflows(token)) as WorkflowsResponse;
 
         if (!data.success || data.error) {
           setError(data.error || "Error loading workflows.");
@@ -66,7 +66,7 @@ const Page = () => {
     };
 
     fetchWorkflows();
-  }, [isAuthenticated, authLoading]);
+  }, [isAuthenticated, authLoading, token]);
 
   if (authLoading || loading) {
     return <Loader />;

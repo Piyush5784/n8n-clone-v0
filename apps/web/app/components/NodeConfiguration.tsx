@@ -1,11 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { BACKEND_URL, TOKEN } from "../config";
+import { BACKEND_URL } from "../config";
 import { CustomNode } from "@repo/types";
 import { toast } from "sonner";
 import { Button } from "./Buttons";
 import { getCredentails } from "../helpers/function";
+import { useAuth } from "@/hooks/useAuth";
 
 interface NodeConfigurationModalProps {
   isOpen: boolean;
@@ -22,6 +23,7 @@ export const NodeConfigurationModal: React.FC<NodeConfigurationModalProps> = ({
   workflowId,
   onSave,
 }) => {
+  const { token } = useAuth();
   const [configuration, setConfiguration] = useState<any>({});
   const [loading, setLoading] = useState(false);
   const [emailCredentials, setEmailCredentials] = useState<any[]>([]);
@@ -34,13 +36,14 @@ export const NodeConfigurationModal: React.FC<NodeConfigurationModalProps> = ({
   // Fetch email credentials when component mounts or when node changes
   useEffect(() => {
     const fetchCredentials = async () => {
+      if (!token) return;
       if (
         node?.data.label === "sendEmail" ||
         node?.data.label === "sendAndAwait"
       ) {
         setLoadingCredentials(true);
         try {
-          const res = (await getCredentails()) as any;
+          const res = (await getCredentails(token)) as any;
           const emailCreds = res.credentials.filter(
             (cred: any) => cred.type === "resend"
           );
@@ -58,11 +61,12 @@ export const NodeConfigurationModal: React.FC<NodeConfigurationModalProps> = ({
       setConfiguration((node.data as any).metadata || {});
       fetchCredentials();
     }
-  }, [node]);
+  }, [node, token]);
 
   if (!isOpen || !node) return null;
 
   const handleSave = async () => {
+    if (!token) return;
     setLoading(true);
     try {
       // Make API call to save node metadata
@@ -75,7 +79,7 @@ export const NodeConfigurationModal: React.FC<NodeConfigurationModalProps> = ({
         },
         {
           headers: {
-            Authorization: `Bearer ${TOKEN}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );

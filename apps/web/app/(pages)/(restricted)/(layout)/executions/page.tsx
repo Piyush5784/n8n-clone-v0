@@ -28,26 +28,14 @@ const Page = () => {
   const [executions, setExecutions] = useState<Execution[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { getAuthHeader, isAuthenticated, isLoading: authLoading } = useAuth();
+  const { isLoading: authLoading, token } = useAuth();
 
   useEffect(() => {
-    if (authLoading) return;
-
-    if (!isAuthenticated) {
-      setLoading(false);
-      return;
-    }
-
     const fetchExecutions = async () => {
       try {
-        const authHeader = getAuthHeader();
-        if (!authHeader) {
-          setError("Authentication required");
-          setLoading(false);
-          return;
-        }
+        if (!token) return;
 
-        const data = (await getExecutions()) as ExecutionsResponse;
+        const data = (await getExecutions(token)) as ExecutionsResponse;
 
         if (!data.success || data.error) {
           setError("Error loading executions");
@@ -68,7 +56,7 @@ const Page = () => {
     };
 
     fetchExecutions();
-  }, []);
+  }, [token]);
 
   const getStatusColor = (status: string) => {
     switch (status) {

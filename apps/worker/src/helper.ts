@@ -28,13 +28,11 @@ export async function sendEmail(
   useEmailConnection: boolean = true
 ): Promise<ExecutionResult> {
   try {
-    let emailCredentials: JsonObject | null;
+    console.log("---------------------------------------------");
+    console.log({ userId });
 
-    if (useEmailConnection) {
-      emailCredentials = await getCredentials(userId, "email_connection");
-    } else {
-      emailCredentials = await getCredentials(userId, "resend");
-    }
+    console.log("---------------------------------------------");
+    let emailCredentials = await getCredentials(userId, "resend");
 
     if (!emailCredentials) {
       console.error("No email credentials found for user:", userId);

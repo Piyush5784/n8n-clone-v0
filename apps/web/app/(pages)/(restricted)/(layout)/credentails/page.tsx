@@ -14,6 +14,7 @@ import {
 import { getCredentails } from "../../../../helpers/function";
 import CreateCredentialsForm from "../../../../components/CreateCredentialsForm";
 import { Button } from "@/components/Buttons";
+import { useAuth } from "@/hooks/useAuth";
 
 const getCredentialPassword = async (id: number) => {
   // Simulated password fetch
@@ -38,6 +39,7 @@ const Credentials = () => {
   const [loadingPassword, setLoadingPassword] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [openPopup, setOpenPopup] = useState(false);
+  const { token } = useAuth();
   const [editForm, setEditForm] = useState({
     type: "",
     name: "",
@@ -50,8 +52,9 @@ const Credentials = () => {
 
   const fetchCredentials = async () => {
     try {
+      if (!token) return;
       setLoading(true);
-      const res = (await getCredentails()) as any;
+      const res = (await getCredentails(token)) as any;
       setCredentials(res.credentials);
     } catch (error) {
       console.error("Failed to fetch credentials:", error);
