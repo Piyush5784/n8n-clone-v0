@@ -1,18 +1,13 @@
 "use client";
 import React from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "./Buttons";
+import { useAuth } from "@/hooks/useAuth";
 
 const LogoutButton = () => {
-  const router = useRouter();
-
-  function logout() {
-    localStorage.removeItem("token");
-    return router.push("/signin");
-  }
+  const { removeAuthToken } = useAuth();
 
   return (
-    <Button onClick={logout} variant={"default"} className="w-full">
+    <Button onClick={removeAuthToken} variant={"default"} className="w-full">
       Logout
     </Button>
   );

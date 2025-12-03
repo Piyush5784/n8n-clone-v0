@@ -26,7 +26,6 @@ interface WorkflowsResponse {
 const Page = () => {
   const [workflows, setWorkflows] = useState<Workflow[]>([]);
   const [loading, setLoading] = useState(true);
-  // const [copy, setCopy];
   const [error, setError] = useState<string | null>(null);
   const { getAuthHeader, isAuthenticated, isLoading: authLoading } = useAuth();
 
@@ -102,10 +101,6 @@ const Page = () => {
             It looks like you haven't created any workflows. Get started by
             creating your first one!
           </p>
-          {/* Assuming there's a route to create a workflow */}
-          <Link href="/workflow/create" passHref>
-            <Button>Create Workflow</Button>
-          </Link>
         </div>
       </div>
     );

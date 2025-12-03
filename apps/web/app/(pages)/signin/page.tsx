@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Button } from "@/components/Buttons";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/useAuth";
 export default function SignInPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -20,6 +21,7 @@ export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const { setAuthToken } = useAuth();
 
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
@@ -56,8 +58,7 @@ export default function SignInPage() {
       );
 
       const data = response.data as { token: string };
-
-      localStorage.setItem("token", data.token);
+      setAuthToken(data.token);
       toast.success("Signed in successfully!");
       router.push("/dashboard");
     } catch (error: any) {
