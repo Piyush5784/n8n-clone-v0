@@ -17,7 +17,6 @@ import { Button } from "@/components/Buttons";
 import { useAuth } from "@/hooks/useAuth";
 
 const getCredentialPassword = async (id: number) => {
-  // Simulated password fetch
   return {
     password: `secret_password_${id}_${Math.random().toString(36).slice(2)}`,
   };

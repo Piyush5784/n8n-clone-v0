@@ -32,6 +32,8 @@ import { AvailableWebhook, CustomNode, hookType } from "@repo/types";
 import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
+import { fetchWebhooks, NodeAdd, SaveWorkflow } from "./function";
+import { AvailableWebhooks } from "@/components/Availabel-webhook";
 
 const initialNodes: CustomNode[] = [];
 const initialEdges: Edge[] = [];
@@ -63,6 +65,7 @@ function Flow() {
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
   const [selectedNodeForConfig, setSelectedNodeForConfig] =
     useState<CustomNode | null>(null);
+
   const onNodeClick = useCallback(
     (event: React.MouseEvent, node: Node) => {
       setSelectedNodeId(node.id);
@@ -131,20 +134,8 @@ function Flow() {
   }, [workflowId, token]);
 
   useEffect(() => {
-    async function fetchWebhooks() {
-      try {
-        if (!token) return;
-        const data = await getWebhooks(token);
-        const webhooks =
-          (data as { webhooks?: AvailableWebhook[] }).webhooks || [];
-
-        setAvliableWebhooks(webhooks);
-      } catch (error) {
-        console.error("Error fetching webhooks:", error);
-        toast.error("Failed to fetch available services");
-      }
-    }
-    fetchWebhooks();
+    if (!token) return;
+    fetchWebhooks({ token, setAvliableWebhooks });
   }, [token]);
 
   const onNodesChange: OnNodesChange = useCallback(
@@ -161,71 +152,12 @@ function Flow() {
   );
 
   function addNode(type: hookType, webhookId: string) {
-    // Check if this is the first node and enforce trigger/webhook rule
-    if (nodes.length === 0 && type !== "trigger" && type !== "webhook") {
-      toast.error("First node must be trigger or webhook");
-      return;
-    }
-
-    // Check if user is trying to add multiple trigger/webhook nodes
-    if (nodes.length > 0 && (type === "trigger" || type === "webhook")) {
-      const hasInitialNode = nodes.some(
-        (node) => node.data.label === "trigger" || node.data.label === "webhook"
-      );
-      if (hasInitialNode) {
-        toast.error(
-          "You can only have one trigger or webhook as the first node"
-        );
-        return;
-      }
-    }
-
-    // // Add AiAgent to available webhooks if not present
-    // if (
-    //   type === "AiAgent" &&
-    //   !avaliableWebhook.some((hook) => hook.type === "AiAgent")
-    // ) {
-    //   // Handle AiAgent node creation
-    // }
-
-    const data: CustomNode = {
-      id: v4(),
-      data: { label: type, webhookId },
-      position: {
-        x: 0,
-        y: 100,
-      },
-    };
-    setNodes((n) => [...n, data]);
-    toast.success(`${type} node added successfully`);
+    NodeAdd({ nodes, setNodes, type, webhookId });
   }
 
   async function onSave() {
-    try {
-      const response = await axios.post(
-        `${BACKEND_URL}/workflow/update`,
-        {
-          workflowId,
-          nodes,
-          edges,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const data = response.data as { success?: boolean };
-      if (data.success) {
-        toast.success("Workflow saved successfully!");
-      } else {
-        toast.error("Failed to save workflow");
-      }
-    } catch (error) {
-      console.error("Error saving workflow:", error);
-      toast.error("Error saving workflow. Please try again.");
-    }
+    if (!token) return;
+    await SaveWorkflow({ workflowId, nodes, edges, token });
   }
 
   if (!token) {
@@ -277,24 +209,9 @@ function Flow() {
           {nodes.length === 0 && (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-50/80 z-10">
               <div className="text-center bg-white p-8 rounded-lg shadow-lg border border-gray-200">
-                <div className="mb-4">
-                  <svg
-                    className="mx-auto h-12 w-12 text-gray-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                    />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                <p className="text-lg font-medium text-gray-900 mb-2">
                   Get started with your workflow
-                </h3>
+                </p>
                 <p className="text-gray-500 mb-6">
                   Add your first node to begin building
                 </p>
@@ -339,71 +256,10 @@ function Flow() {
         </div>
 
         <div className="w-80 bg-white border-l border-gray-200 flex flex-col">
-          {/* <div className="p-6 border-b border-gray-200">
-            <div className="relative"> */}
-          {/* <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                ...
-                <Search className="h-5 w-5 text-gray-400" />
-              </div>
-              <input
-                type="text"
-                placeholder="Search services..."
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-              /> */}
-          {/* </div> */}
-          {/* </div> */}
-
-          <div className="flex-1 overflow-y-auto">
-            <div className="p-6">
-              <h3 className="text-sm font-medium text-gray-900 mb-4">
-                Available Services
-              </h3>
-
-              {avaliableWebhook.length === 0 ? (
-                <div className="text-center py-8">
-                  <p className="text-gray-500 text-sm">Loading services...</p>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {avaliableWebhook
-                    .filter(
-                      (hook) =>
-                        hook.type !== "trigger" && hook.type !== "webhook"
-                    )
-                    .map((hook) => (
-                      <div
-                        key={hook.id}
-                        className="group p-4 rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-sm cursor-pointer transition-all duration-200 bg-white hover:bg-blue-50"
-                        onClick={() => {
-                          const ndeType = webhookType(hook) as hookType;
-                          addNode(ndeType, hook.id);
-                        }}
-                      >
-                        <div className="flex items-center">
-                          <div className="shrink-0 mr-3">
-                            <img
-                              src={hook.image}
-                              alt={hook.type}
-                              className="w-8 h-8 rounded object-cover"
-                            />
-                            <span className="text-xl hidden">{hook.type}</span>
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium text-gray-900 group-hover:text-blue-900">
-                              {hook.type || hook.id}
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              Click to add to workflow
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                </div>
-              )}
-            </div>
-          </div>
-
+          <AvailableWebhooks
+            avaliableWebhook={avaliableWebhook}
+            addNode={addNode}
+          />
           <Credentials />
         </div>
       </div>

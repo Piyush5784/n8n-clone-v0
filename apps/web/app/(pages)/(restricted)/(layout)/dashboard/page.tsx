@@ -1,11 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { getWorkflows } from "../../../../helpers/function";
-import Loader from "../../../../components/Loader";
+import { getWorkflows } from "@/helpers/function";
+import Loader from "@/components/Loader";
 import Link from "next/link";
-import { useAuth } from "../../../../hooks/useAuth";
-import { BACKEND_URL, BACKEND_URL_HOOKS } from "../../../../config";
-
+import { useAuth } from "@/hooks/useAuth";
+import { BACKEND_URL_HOOKS } from "@/config";
 import { CopyButton } from "@/components/copy-button";
 import { Button } from "@/components/Buttons";
 import { toast } from "sonner";
@@ -29,6 +28,7 @@ const Page = () => {
   const [error, setError] = useState<string | null>(null);
   const { getAuthHeader, isAuthenticated, isLoading: authLoading } = useAuth();
   const { token } = useAuth();
+
   useEffect(() => {
     if (authLoading || !token) return;
 
@@ -98,7 +98,7 @@ const Page = () => {
             No workflows yet
           </h3>
           <p className="text-base text-gray-600 text-center">
-            It looks like you haven't created any workflows. Get started by
+            It looks like you havenot created any workflows. Get started by
             creating your first one!
           </p>
         </div>
