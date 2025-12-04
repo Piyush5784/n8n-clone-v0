@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 "use client";
 import { useState, useCallback, useEffect } from "react";
 import {
@@ -16,26 +17,40 @@ import {
   Controls,
   MiniMap,
 } from "@xyflow/react";
+//@ts-expect-error
 import "@xyflow/react/dist/style.css";
-import { Button } from "@/components/Buttons";
-import { getWebhooks, webhookType } from "@/helpers/function";
+import { Button } from "@/components/ui/button";
 import { BACKEND_URL } from "@/config";
 import Credentials from "@/components/Credentials";
 import { useParams } from "next/navigation";
 import { NodeConfigurationModal } from "@/components/NodeConfiguration";
 import axios from "axios";
-import { v4 } from "uuid";
 import ExecuteButton from "@/components/ExecuteButton";
 import Link from "next/link";
 import { WorkflowSidebar } from "@/components/WorkflowSidebar";
-import { AvailableWebhook, CustomNode, hookType } from "@repo/types";
+import { AvailableWebhook } from "@repo/types";
 import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
-import { fetchWebhooks, NodeAdd, SaveWorkflow } from "./function";
+import { fetchWebhooks, SaveWorkflow } from "./function";
 import { AvailableWebhooks } from "@/components/Availabel-webhook";
+import {
+  CustomNodeTypes,
+  nodeTypes,
+  CustomNodes,
+  nodeIcons,
+  getNodeDescription,
+} from "./CustomNode";
+import React from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
-const initialNodes: CustomNode[] = [];
+const initialNodes: Node[] = [];
 const initialEdges: Edge[] = [];
 
 const fitViewOptions: FitViewOptions = {
@@ -48,15 +63,13 @@ const defaultEdgeOptions: DefaultEdgeOptions = {
 
 function Flow() {
   const { workflowId } = useParams<{ workflowId: string }>();
-
   const { token } = useAuth();
 
   const [nodes, setNodes] = useState<Node[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
-  const [selectedNodeId, setSelectedNodeId] = useState<string>("");
-  const [selectedNodeType, setSelectedNodeType] = useState<
-    "trigger" | "webhook" | "sendEmail" | "sendTelegram" | "AiAgent"
-  >("webhook");
+  const [, setSelectedNodeId] = useState<string>("");
+  const [, setSelectedNodeType] = useState<CustomNodeTypes>("webhook");
+  const [nodeIdCounter, setNodeIdCounter] = useState(1);
 
   const [avaliableWebhook, setAvliableWebhooks] = useState<AvailableWebhook[]>(
     []
@@ -64,19 +77,19 @@ function Flow() {
 
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
   const [selectedNodeForConfig, setSelectedNodeForConfig] =
-    useState<CustomNode | null>(null);
+    useState<Node | null>(null);
 
   const onNodeClick = useCallback(
     (event: React.MouseEvent, node: Node) => {
       setSelectedNodeId(node.id);
       const nodeData = node.data as {
-        label: "trigger" | "webhook" | "sendEmail" | "sendTelegram" | "AiAgent";
+        label: CustomNodeTypes;
       };
       setSelectedNodeType(nodeData.label);
 
       const customNode = nodes.find((n) => n.id === node.id);
       if (customNode) {
-        setSelectedNodeForConfig(customNode as CustomNode);
+        setSelectedNodeForConfig(customNode);
         setIsConfigModalOpen(true);
       }
     },
@@ -96,15 +109,24 @@ function Flow() {
             }
           );
 
-          console.log("Workflow response:", response.data);
-
-          console.log(response.data);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const data = response.data as { success?: boolean; workflow?: any };
           if (data.success && data.workflow) {
             const workflowData = data.workflow;
 
             if (workflowData.nodes && Array.isArray(workflowData.nodes)) {
-              setNodes(workflowData.nodes);
+              // Ensure all nodes have type: "custom"
+              const normalizedNodes = workflowData.nodes.map((node: Node) => ({
+                ...node,
+                type: node.type || "custom", // Set type to "custom" if not already set
+              }));
+              setNodes(normalizedNodes);
+              // Set counter to max node ID + 1
+              const maxId = Math.max(
+                ...workflowData.nodes.map((n: Node) => parseInt(n.id) || 0),
+                0
+              );
+              setNodeIdCounter(maxId + 1);
             }
 
             if (workflowData.edges && Array.isArray(workflowData.edges)) {
@@ -151,9 +173,19 @@ function Flow() {
     []
   );
 
-  function addNode(type: hookType, webhookId: string) {
-    NodeAdd({ nodes, setNodes, type, webhookId });
-  }
+  const addNode = (type: CustomNodeTypes, webhookId?: string) => {
+    const newNode = {
+      id: String(nodeIdCounter),
+      type: "custom",
+      data: { label: type, webhookId: webhookId || "" },
+      position: {
+        x: Math.random() * 400 + 100,
+        y: Math.random() * 400 + 100,
+      },
+    };
+    setNodes((nds) => [...nds, newNode]);
+    setNodeIdCounter((id) => id + 1);
+  };
 
   async function onSave() {
     if (!token) return;
@@ -161,93 +193,103 @@ function Flow() {
   }
 
   if (!token) {
-    return <div>loading</div>;
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <p className="text-gray-500">Loading...</p>
+      </div>
+    );
   }
 
   if (!workflowId) {
     return (
       <div className="h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">
-            Workflow ID Required
-          </h2>
-          <p className="text-gray-600">
-            Please provide a valid workflow ID to continue.
-          </p>
-        </div>
+        <Card>
+          <CardHeader className="text-center">
+            <CardTitle>Workflow ID Required</CardTitle>
+            <CardDescription>
+              Please provide a valid workflow ID to continue.
+            </CardDescription>
+          </CardHeader>
+        </Card>
       </div>
     );
   }
 
   return (
-    <div className="h-screen bg-gray-50">
+    <div className="h-screen bg-gray-50 flex flex-col">
       <WorkflowSidebar workflowId={workflowId} />
-      <div className="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
-        <div className="text-2xl font-semibold text-gray-800">
-          <Button className="mx-3" asChild variant={"outline"}>
+
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm">
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" size="icon" asChild>
             <Link href={"/dashboard"}>
-              {" "}
-              <ArrowLeft />
+              <ArrowLeft className="w-5 h-5" />
             </Link>
           </Button>
-          Workflow Builder
-          <span className="text-sm text-gray-500 ml-2">ID: {workflowId}</span>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-800">
+              Workflow Builder
+            </h1>
+            <p className="text-sm text-gray-500">ID: {workflowId}</p>
+          </div>
         </div>
-        <div className="flex gap-3">
-          <Link href={"/dashboard"}>
-            <Button variant="outline">Go to dashboard</Button>
-          </Link>
-          <Button variant="default" onClick={onSave} className="px-6 py-2">
-            Save
+
+        <div className="flex gap-2">
+          <Button variant="outline" asChild>
+            <Link href={"/dashboard"}>Dashboard</Link>
           </Button>
+          <Button onClick={onSave}>Save</Button>
           <ExecuteButton workflowId={workflowId} />
         </div>
       </div>
 
-      <div className="flex h-[calc(100vh-80px)]">
+      <div className="flex flex-1 overflow-hidden">
+        {/* Canvas */}
         <div className="flex-1 relative">
           {nodes.length === 0 && (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-50/80 z-10">
-              <div className="text-center bg-white p-8 rounded-lg shadow-lg border border-gray-200">
-                <p className="text-lg font-medium text-gray-900 mb-2">
-                  Get started with your workflow
-                </p>
-                <p className="text-gray-500 mb-6">
-                  Add your first node to begin building
-                </p>
-                <div className="space-y-3">
+              <Card className="max-w-md">
+                <CardHeader className="text-center">
+                  <CardTitle>Get started with your workflow</CardTitle>
+                  <CardDescription>
+                    Add your first node to begin building
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3">
                   <Button
-                    onClick={() => addNode("trigger", "")}
+                    onClick={() => addNode("trigger")}
                     variant="default"
-                    className="w-full justify-center"
+                    className="w-full"
                   >
                     <span className="mr-2">⚡</span>
                     Add Trigger
                   </Button>
                   <Button
-                    onClick={() => addNode("webhook", "")}
-                    variant="default"
-                    className="w-full justify-center"
+                    onClick={() => addNode("webhook")}
+                    variant="outline"
+                    className="w-full"
                   >
                     <span className="mr-2">🔗</span>
                     Add Webhook
                   </Button>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
             </div>
           )}
 
           <ReactFlow
             nodes={nodes}
             edges={edges}
+            nodeTypes={nodeTypes}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
-            // onNodeDrag={onNodeDrag}
             onNodeClick={onNodeClick}
             fitView
             fitViewOptions={fitViewOptions}
             defaultEdgeOptions={defaultEdgeOptions}
+            className="bg-gray-50"
           >
             <Background />
             <MiniMap />
@@ -255,12 +297,64 @@ function Flow() {
           </ReactFlow>
         </div>
 
-        <div className="w-80 bg-white border-l border-gray-200 flex flex-col">
-          <AvailableWebhooks
-            avaliableWebhook={avaliableWebhook}
-            addNode={addNode}
-          />
-          <Credentials />
+        {/* Sidebar */}
+        <div className="w-80 bg-white border-l border-gray-200 shadow-lg overflow-y-auto">
+          <div className="p-4">
+            <h3 className="text-sm font-semibold text-gray-700 mb-3">
+              Add Nodes
+            </h3>
+            <div className="space-y-2">
+              {CustomNodes.map((nodeType: CustomNodeTypes, idx: number) => {
+                const Icon = nodeIcons[nodeType];
+                return (
+                  <div
+                    key={idx}
+                    onClick={() => addNode(nodeType)}
+                    className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:border-green-500 hover:bg-green-50 cursor-pointer transition-all duration-200 group"
+                  >
+                    <div className="bg-green-50 p-2 rounded-lg group-hover:bg-green-100 transition-colors">
+                      <Icon className="w-4 h-4 text-green-600" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-gray-800 capitalize">
+                        {nodeType === "sendAndAwait"
+                          ? "Send & Await"
+                          : nodeType}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        {getNodeDescription(nodeType)}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <Card className="mt-6 bg-green-50 border-green-200">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm text-green-900">
+                  💡 Quick Tip
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-xs text-green-700 pt-0">
+                Click any node to configure it. Connect nodes by dragging from
+                the bottom handle to the top handle of another node.
+              </CardContent>
+            </Card>
+          </div>
+
+          {avaliableWebhook.length > 0 && (
+            <div className="border-t border-gray-200 p-4">
+              <AvailableWebhooks
+                avaliableWebhook={avaliableWebhook}
+                addNode={addNode}
+              />
+            </div>
+          )}
+
+          <div className="border-t border-gray-200">
+            <Credentials />
+          </div>
         </div>
       </div>
 
