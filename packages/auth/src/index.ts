@@ -1,9 +1,16 @@
 import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { JWT_SECRET } from "../config";
 import { PrismaClient } from "@repo/db/client";
+import "./types";
+
+if (!process.env.JWT_SECRET) {
+  throw new Error("JWT_SECRET environment variable is not set");
+}
+
+const JWT_SECRET: string = process.env.JWT_SECRET;
 
 const prisma = new PrismaClient();
+
 export async function authMiddleware(
   req: Request,
   res: Response,
@@ -13,7 +20,7 @@ export async function authMiddleware(
     const authHeader = req.headers["authorization"];
     if (!authHeader) {
       return res.status(401).json({
-        message: "Unauthorized User 1",
+        message: "Unauthorized User",
       });
     }
 
@@ -33,7 +40,7 @@ export async function authMiddleware(
 
     if (!userId) {
       return res.status(401).json({
-        message: "Unauthorized User 2",
+        message: "Unauthorized User",
       });
     }
 
@@ -45,7 +52,7 @@ export async function authMiddleware(
 
     if (!user) {
       return res.status(401).json({
-        message: "Unauthorized User 3",
+        message: "Unauthorized User",
       });
     }
 
@@ -56,7 +63,7 @@ export async function authMiddleware(
   } catch (error) {
     console.log(error);
     return res.status(401).json({
-      message: "Unauthorized User 4",
+      message: "Unauthorized User",
     });
   }
 }

@@ -1,6 +1,6 @@
 import { PrismaClient } from "@repo/db/client";
 import { Router } from "express";
-import { authMiddleware } from "../middleware/authMiddleware";
+import { authMiddleware } from "@repo/auth";
 import { createCredentialSchema, createWorkflow } from "../types";
 import { parseAsync } from "zod";
 

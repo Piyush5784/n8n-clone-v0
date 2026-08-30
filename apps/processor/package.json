@@ -8,11 +8,13 @@
   },
   "keywords": [],
   "dependencies": {
-    "@repo/db": "*"
+    "@repo/db": "workspace:*"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/kafkajs": "^1.8.2"
+    "@repo/typescript-config": "workspace:*",
+    "@types/kafkajs": "^1.8.2",
+    "typescript": "5.9.2"
   }
 }

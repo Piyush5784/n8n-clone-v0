@@ -10,11 +10,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@repo/db": "*",
+    "@repo/auth": "workspace:*",
+    "@repo/db": "workspace:*",
     "@types/cors": "^2.8.19",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "express": "^5.1.0"
   },
   "devDependencies": {
-    "@types/express": "^5.0.3"
+    "@repo/typescript-config": "workspace:*",
+    "@types/express": "^5.0.3",
+    "typescript": "5.9.2"
   }
 }
