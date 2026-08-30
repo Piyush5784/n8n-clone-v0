@@ -10,12 +10,14 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
     "@types/axios": "^0.9.36",
     "@types/imap": "^0.8.42",
     "@types/kafkajs": "^1.8.2",
     "@types/mailparser": "^3.4.6",
     "@types/node-telegram-bot-api": "^0.64.11",
-    "@types/nodemailer": "^7.0.1"
+    "@types/nodemailer": "^7.0.1",
+    "typescript": "5.9.2"
   },
   "dependencies": {
     "@ai-sdk/google": "^2.0.14",

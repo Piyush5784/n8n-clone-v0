@@ -1,6 +1,6 @@
 import { PrismaClient } from "@repo/db/client";
 import express from "express";
-import { authMiddleware } from "./authMiddleware";
+import { authMiddleware } from "@repo/auth";
 import cors from "cors";
 const app = express();
 const port = 5000;

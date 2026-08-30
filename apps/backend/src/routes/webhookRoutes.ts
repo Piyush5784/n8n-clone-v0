@@ -1,6 +1,6 @@
 import { PrismaClient } from "@repo/db/client";
 import { Router } from "express";
-import { authMiddleware } from "../middleware/authMiddleware";
+import { authMiddleware } from "@repo/auth";
 
 const router = Router();
 const prisma = new PrismaClient();

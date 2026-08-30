@@ -38,8 +38,8 @@
     "@radix-ui/react-toggle": "^1.1.10",
     "@radix-ui/react-toggle-group": "^1.1.11",
     "@radix-ui/react-tooltip": "^1.2.8",
-    "@repo/types": "*",
-    "@repo/ui": "*",
+    "@repo/types": "workspace:*",
+    "@repo/ui": "workspace:*",
     "@tailwindcss/postcss": "^4.1.13",
     "@xyflow/react": "^12.8.5",
     "axios": "^1.12.2",
@@ -67,8 +67,8 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
-    "@repo/eslint-config": "*",
-    "@repo/typescript-config": "*",
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "@types/node": "^22.15.3",
     "@types/react": "19.1.0",
     "@types/react-dom": "19.1.1",
