@@ -1,4 +1,6 @@
+# FlowBoard
 
+An n8n-style workflow automation with Simplifying things like Email Sending, sending a telegram msg, back-and-forth email communication, and running AI agent for any specific tasks
 
 
 
